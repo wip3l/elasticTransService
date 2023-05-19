@@ -22,6 +22,10 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * @author liqijian
+ * @Description ElasticSearch搜索工具类
+ */
 @Component
 public class ElasticSearchUtils {
     @Autowired
@@ -43,7 +47,7 @@ public class ElasticSearchUtils {
      *                        若正常字段排序，则使用增序排序，类似于sql中的asc
      * @param pageNum         页数
      * @param pageSize        每页大小
-     * @return
+     * @return Map<String,Object>
      */
     public Map<String ,Object> queryForEs(String indexName, Map<String, Object> equalsCondition, Map<String, Object> rangeCondition,
                                           List<String> orderBy, int pageNum, int pageSize){
@@ -87,9 +91,8 @@ public class ElasticSearchUtils {
         SearchHits searchHits = response.getHits();
         SearchHit[] hits = searchHits.getHits();
         totalNum = searchHits.getTotalHits().value;
-        for (int i = 0; i < hits.length; i++){
-            SearchHit hit = hits[i];
-            Map<String, Object> sourceMap= hit.getSourceAsMap();
+        for (SearchHit hit : hits) {
+            Map<String, Object> sourceMap = hit.getSourceAsMap();
             sourceMap.put("id", hit.getId());
             queryResult.add(sourceMap);
         }
