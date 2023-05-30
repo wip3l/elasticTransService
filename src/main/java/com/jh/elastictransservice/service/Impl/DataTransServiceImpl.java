@@ -18,6 +18,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,9 @@ import java.util.UUID;
  */
 @Service
 public class DataTransServiceImpl implements DataTransService {
+
+    @Value("${elasticsearch.bulkSize}")
+    private int bulkSize;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private ElasticClientUtils elasticClientUtils;
@@ -140,7 +144,7 @@ public class DataTransServiceImpl implements DataTransService {
                 //设置索引刷新规则
                 bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
                 //分批次提交，数量控制
-                if (bulkRequest.numberOfActions() % 1000 == 0) {
+                if (bulkRequest.numberOfActions() % bulkSize == 0) {
                     total = total + bulkRequest.numberOfActions();
                     log.info("es本次同步数据数量:{}", bulkRequest.numberOfActions());
                     log.info("es一共同步数据数量:{}", total);
