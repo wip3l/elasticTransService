@@ -26,7 +26,14 @@ public class DataTransController {
     @ApiOperation(value = "单个csv文件解析", notes = "单个csv文件解析")
     public ResponseData csvTrans (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) {
         dataTransService.csvToEs(new CsvToEsDTO(csvToEs));
-        return new ResponseData();
+        return new ResponseData(200,"正在解析");
+    }
+
+    @PostMapping("/csvTransBulk")
+    @ApiOperation(value = "单个csv文件解析的bulk版本", notes = "单个csv文件解析的bulk版本")
+    public ResponseData csvTransBulk (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) {
+        dataTransService.csvToEsBulk(new CsvToEsDTO(csvToEs));
+        return new ResponseData(200,"正在解析");
     }
 
     @DeleteMapping("/deleteRow")

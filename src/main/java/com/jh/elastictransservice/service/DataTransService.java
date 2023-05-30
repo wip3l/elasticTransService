@@ -13,5 +13,7 @@ public interface DataTransService {
 
     void newCsv(String fileName) throws IOException;
 
+    void csvToEsBulk(CsvToEsDTO csvToEsDTO);
+
     void deleteRow(String indexName, String id) throws IOException;
 }
