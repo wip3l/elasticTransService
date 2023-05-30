@@ -130,6 +130,7 @@ public class DataTransServiceImpl implements DataTransService {
             //创建index请求
             IndexRequest requestData = null;
 
+            long startTimeMillis = System.currentTimeMillis();
             int total = 0;
             //遍历csv文件行
             while (csvReader.readRecord()) {
@@ -146,19 +147,21 @@ public class DataTransServiceImpl implements DataTransService {
                 //分批次提交，数量控制
                 if (bulkRequest.numberOfActions() % bulkSize == 0) {
                     total = total + bulkRequest.numberOfActions();
-                    log.info("es本次同步数据数量:{}", bulkRequest.numberOfActions());
-                    log.info("es一共同步数据数量:{}", total);
+                    log.info("缓存数据达到bulkSize阈值:{} 开始本次提交", bulkRequest.numberOfActions());
                     BulkResponse bulkResponse = elasticClient.bulk(bulkRequest, RequestOptions.DEFAULT);
                     log.info("es同步数据结果是否出错:{}", bulkResponse.hasFailures());
+                    log.info("es一共同步数据数量:{}", total);
                     bulkRequest = new BulkRequest();
                 }
             }
             //最后提交
-            log.info("es本次同步数据数量:{}", bulkRequest.numberOfActions());
+            log.info("缓存数据达到bulkSize阈值:{} 开始本次提交", bulkRequest.numberOfActions());
             total = total + bulkRequest.numberOfActions();
-            log.info("es一共同步数据数量:{}", total);
             BulkResponse bulkResponse = elasticClient.bulk(bulkRequest, RequestOptions.DEFAULT);
             log.info("es同步数据结果是否出错:{}", bulkResponse.hasFailures());
+            long endTimeMillis = System.currentTimeMillis();
+            log.info("es本次同步数据数量:{}", total);
+            log.info("es同步数据耗时:{} ms", endTimeMillis - startTimeMillis);
 
         } catch (IOException e) {
             log.error("解析csv文件失败", e);
