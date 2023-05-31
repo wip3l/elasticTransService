@@ -1,6 +1,6 @@
 package com.jh.elastictransservice.controller;
 
-import com.jh.elastictransservice.result.ResponseData;
+import com.jh.elastictransservice.utils.result.ResponseData;
 import com.jh.elastictransservice.service.DataTransService;
 import com.jh.elastictransservice.utils.dto.CsvToEsDTO;
 import com.jh.elastictransservice.utils.vo.CsvToEs;

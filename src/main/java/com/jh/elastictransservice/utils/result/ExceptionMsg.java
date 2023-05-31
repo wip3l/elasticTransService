@@ -1,4 +1,4 @@
-package com.jh.elastictransservice.result;
+package com.jh.elastictransservice.utils.result;
 
 /**
  * @author liqijian

@@ -1,6 +1,6 @@
 package com.jh.elastictransservice.controller;
 
-import com.jh.elastictransservice.result.ResponseData;
+import com.jh.elastictransservice.utils.result.ResponseData;
 import com.jh.elastictransservice.service.IndexHandleService;
 import com.jh.elastictransservice.utils.dto.IndexCreateDTO;
 import com.jh.elastictransservice.utils.vo.IndexCreate;

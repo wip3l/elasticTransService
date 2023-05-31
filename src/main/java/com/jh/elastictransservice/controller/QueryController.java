@@ -1,6 +1,6 @@
 package com.jh.elastictransservice.controller;
 
-import com.jh.elastictransservice.result.ResponseData;
+import com.jh.elastictransservice.utils.result.ResponseData;
 import com.jh.elastictransservice.service.ElasticQuerySearchService;
 import com.jh.elastictransservice.utils.dto.QuerySearchDTO;
 import com.jh.elastictransservice.utils.vo.QuerySearch;

@@ -155,7 +155,7 @@ public class DataTransServiceImpl implements DataTransService {
                 }
             }
             //最后提交
-            log.info("缓存数据达到bulkSize阈值:{} 开始本次提交", bulkRequest.numberOfActions());
+            log.info("提交最后一批数据:{} ", bulkRequest.numberOfActions());
             total = total + bulkRequest.numberOfActions();
             BulkResponse bulkResponse = elasticClient.bulk(bulkRequest, RequestOptions.DEFAULT);
             log.info("es同步数据结果是否出错:{}", bulkResponse.hasFailures());
