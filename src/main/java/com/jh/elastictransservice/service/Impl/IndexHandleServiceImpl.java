@@ -13,6 +13,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -62,6 +63,7 @@ public class IndexHandleServiceImpl implements IndexHandleService {
     }
 
     @Override
+    @Async
     public void deleteAll (String indexName) throws IOException {
         DeleteByQueryRequest deleteRequest = new DeleteByQueryRequest (indexName);
         deleteRequest.setQuery (QueryBuilders.matchAllQuery());

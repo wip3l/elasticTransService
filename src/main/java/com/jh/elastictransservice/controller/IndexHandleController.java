@@ -1,6 +1,6 @@
 package com.jh.elastictransservice.controller;
 
-import com.jh.elastictransservice.utils.result.ResponseData;
+import com.jh.elastictransservice.result.ResponseData;
 import com.jh.elastictransservice.service.IndexHandleService;
 import com.jh.elastictransservice.utils.dto.IndexCreateDTO;
 import com.jh.elastictransservice.utils.vo.IndexCreate;
@@ -41,6 +41,6 @@ public class IndexHandleController {
     @PostMapping("/truncate")
     public ResponseData truncateIndex(@ApiParam("索引名称") @RequestParam String indexName) throws IOException {
         indexHandleService.deleteAll(indexName);
-        return new ResponseData();
+        return new ResponseData(200,"正在清空索引数据： " + indexName);
     }
 }

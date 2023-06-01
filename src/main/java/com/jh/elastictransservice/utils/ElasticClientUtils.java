@@ -38,21 +38,35 @@ public class ElasticClientUtils {
             final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
             credentialsProvider.setCredentials(AuthScope.ANY,
                     new UsernamePasswordCredentials(username, password));  //es账号密码
-            client = new RestHighLevelClient(
-                    RestClient.builder(
-                            new HttpHost(host, Integer.parseInt(port), "http")
-                    ).setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
-                        @Override
-                        public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
-                            httpClientBuilder.disableAuthCaching();
-                            return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                        }
-                    })
+            RestClientBuilder builder = RestClient.builder(
+                    new HttpHost(host, Integer.parseInt(port), "http")
             );
+            builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
+                @Override
+                public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
+                    httpClientBuilder.disableAuthCaching();
+                    return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                }
+            });
+            builder.setRequestConfigCallback(requestConfigBuilder -> {
+                requestConfigBuilder.setConnectTimeout(10000);
+                requestConfigBuilder.setSocketTimeout(30000);
+                requestConfigBuilder.setConnectionRequestTimeout(5000);
+                return requestConfigBuilder;
+            });
+            client = new RestHighLevelClient(builder);
 
         } else {
-            client = new RestHighLevelClient(RestClient.builder(
-                    new HttpHost(host, Integer.parseInt(port), "http")));
+            RestClientBuilder builder = RestClient.builder(
+                    new HttpHost(host, Integer.parseInt(port), "http"));
+            //设置超时时间
+            builder.setRequestConfigCallback(requestConfigBuilder -> {
+                requestConfigBuilder.setConnectTimeout(100000);
+                requestConfigBuilder.setSocketTimeout(300000);
+                requestConfigBuilder.setConnectionRequestTimeout(50000);
+                return requestConfigBuilder;
+            });
+            client = new RestHighLevelClient(builder);
         }
         return client;
     }
