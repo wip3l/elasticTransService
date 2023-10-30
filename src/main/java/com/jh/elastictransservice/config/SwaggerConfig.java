@@ -29,7 +29,7 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("久航大数据项目").description("数据解析接口API")
+        return new ApiInfoBuilder().title("BMH信息化建设项目").description("数据解析接口API")
                 .version("1.0").build();
     }
 
