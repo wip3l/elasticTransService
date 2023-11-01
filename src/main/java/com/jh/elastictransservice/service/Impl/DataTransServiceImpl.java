@@ -4,6 +4,7 @@ import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import com.jh.elastictransservice.service.DataTransService;
 import com.jh.elastictransservice.utils.ElasticClientUtils;
+import com.jh.elastictransservice.utils.ElasticSearchUtils;
 import com.jh.elastictransservice.utils.dto.CsvToEsDTO;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -39,6 +41,8 @@ public class DataTransServiceImpl implements DataTransService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private ElasticClientUtils elasticClientUtils;
+    @Autowired
+    private ElasticSearchUtils elasticSearchUtils;
 
     @Override
     @Async
@@ -61,12 +65,16 @@ public class DataTransServiceImpl implements DataTransService {
                     StandardCharsets.UTF_8);
             //设置header
             String[] headers;
+            String[] oriHeader;
             if (csvToEsDTO.getIsCustomTitle()) {
                 headers = csvToEsDTO.getTitle();
                 csvReader.setHeaders(headers);
+                oriHeader = new String[]{"自定义表头时无原始表头"};
             } else {
                 csvReader.readHeaders();
-                headers = csvReader.getHeaders();
+                oriHeader = csvReader.getHeaders();
+                headers = elasticSearchUtils.ch2py(oriHeader);
+                csvReader.setHeaders(headers);
             }
             if (headers.length < 1) {
                 throw new RuntimeException("请检查csv文件Title配置");
@@ -79,6 +87,7 @@ public class DataTransServiceImpl implements DataTransService {
                 UpdateRequest updateRequest = new UpdateRequest(csvToEsDTO.getIndexName(), s1
                         );
                 Map<String, Object> jsonMap = new HashMap<>();
+                jsonMap.put("oriHeader", Arrays.toString(oriHeader));
                 for (String header : headers) {
                     jsonMap.put(header, csvReader.get(header));
                 }
@@ -114,12 +123,16 @@ public class DataTransServiceImpl implements DataTransService {
                     StandardCharsets.UTF_8);
             //设置header
             String[] headers;
+            String[] oriHeader;
             if (csvToEsDTO.getIsCustomTitle()) {
                 headers = csvToEsDTO.getTitle();
                 csvReader.setHeaders(headers);
+                oriHeader = new String[]{"自定义表头时无原始表头"};
             } else {
                 csvReader.readHeaders();
-                headers = csvReader.getHeaders();
+                oriHeader = csvReader.getHeaders();
+                headers = elasticSearchUtils.ch2py(oriHeader);
+                csvReader.setHeaders(headers);
             }
             if (headers.length < 1) {
                 throw new RuntimeException("请检查csv文件Title配置");
@@ -137,6 +150,7 @@ public class DataTransServiceImpl implements DataTransService {
 //                HashFunction hf = Hashing.murmur3_128();
 //                String s1 = hf.newHasher().putString(csvReader.get(0)+csvReader.get(1)+csvReader.get(2), Charsets.UTF_8).hash().toString();
                 Map<String, Object> jsonMap = new HashMap<>();
+                jsonMap.put("oriHeader", Arrays.toString(oriHeader));
                 for (String header : headers) {
                     jsonMap.put(header, csvReader.get(header));
                 }
