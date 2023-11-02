@@ -36,6 +36,20 @@ public class DataTransController {
         return new ResponseData(200,"正在解析");
     }
 
+    @PostMapping("/csvFoldToEs")
+    @ApiOperation(value = "解析文件该级目录下的所有文件", notes = "解析文件该级目录下的所有文件")
+    public ResponseData csvFoldToEs (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) {
+        dataTransService.csvFoldToEs(new CsvToEsDTO(csvToEs));
+        return new ResponseData(200,"正在解析");
+    }
+
+    @PostMapping("/csvDeepFoldToEs")
+    @ApiOperation(value = "遍历该目录到最底层的所有文件并解析", notes = "遍历该目录到最底层的所有文件并解析")
+    public ResponseData csvDeepFoldToEs (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) {
+        dataTransService.csvDeepFoldToEs(new CsvToEsDTO(csvToEs));
+        return new ResponseData(200,"正在解析");
+    }
+
     @DeleteMapping("/deleteRow")
     @ApiOperation(value = "删除单行数据", notes = "删除单行数据")
     public ResponseData deleteRow (@ApiParam("索引名称") @RequestParam String indexName,

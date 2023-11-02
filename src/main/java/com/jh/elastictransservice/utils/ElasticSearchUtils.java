@@ -1,11 +1,6 @@
 package com.jh.elastictransservice.utils;
 
 import com.jh.elastictransservice.config.DefineConstant;
-import net.sourceforge.pinyin4j.PinyinHelper;
-import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
-import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -292,35 +287,5 @@ public class ElasticSearchUtils {
         }
         return result;
     }
-
-    public  String[] ch2py(String[] strings) {
-        String[] newStrings = new String[strings.length];
-        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
-        format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
-        format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
-        format.setVCharType(HanyuPinyinVCharType.WITH_V);
-        for ( int i =0 ; i < strings.length; i++) {
-            StringBuilder stringBuilder = new StringBuilder();
-            char[] hanYuArr = strings[i].trim().toCharArray();
-            try {
-                for (int j = 0, len = hanYuArr.length; j < len; j++) {
-                    if (Character.toString(hanYuArr[j]).matches("[\\u4E00-\\u9FA5]+")) {
-                        String[] pys = PinyinHelper.toHanyuPinyinStringArray(hanYuArr[j], format);
-                        for (String py : pys) {
-                            stringBuilder.append(py);
-                        }
-                    } else {
-                        stringBuilder.append(hanYuArr[j]);
-                    }
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            newStrings[i] = String.valueOf(stringBuilder);
-            System.out.println(newStrings[i]);
-        }
-        return newStrings;
-    }
-
 
 }

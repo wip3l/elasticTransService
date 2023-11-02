@@ -27,6 +27,8 @@ public class CsvToEs implements Serializable {
     String splitWord;
     @ApiModelProperty(value = "csv文件首行是否有标题")
     Boolean isHasTitle;
+    @ApiModelProperty(value = "是否开启标题汉字转拼音")
+    Boolean isTitleHasCh;
     @NotNull(message = "是否自定义标题不能为空")
     @ApiModelProperty(value = "是否自定义标题", required = true)
     Boolean isCustomTitle;

@@ -3,8 +3,8 @@ package com.jh.elastictransservice.service.Impl;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import com.jh.elastictransservice.service.DataTransService;
+import com.jh.elastictransservice.utils.DataTransUtils;
 import com.jh.elastictransservice.utils.ElasticClientUtils;
-import com.jh.elastictransservice.utils.ElasticSearchUtils;
 import com.jh.elastictransservice.utils.dto.CsvToEsDTO;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -23,12 +23,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author liqijian
@@ -42,7 +40,7 @@ public class DataTransServiceImpl implements DataTransService {
     @Autowired
     private ElasticClientUtils elasticClientUtils;
     @Autowired
-    private ElasticSearchUtils elasticSearchUtils;
+    private DataTransUtils dataTransUtils;
 
     @Override
     @Async
@@ -73,7 +71,11 @@ public class DataTransServiceImpl implements DataTransService {
             } else {
                 csvReader.readHeaders();
                 oriHeader = csvReader.getHeaders();
-                headers = elasticSearchUtils.ch2py(oriHeader);
+                if (csvToEsDTO.getIsTitleHasCh()) {
+                    headers = dataTransUtils.ch2py(oriHeader);
+                } else {
+                    headers = oriHeader;
+                }
                 csvReader.setHeaders(headers);
             }
             if (headers.length < 1) {
@@ -99,6 +101,29 @@ public class DataTransServiceImpl implements DataTransService {
         } catch (IOException e) {
             log.error("解析csv文件失败", e);
             throw new RuntimeException("解析csv文件失败",e);
+        }
+    }
+
+
+    @Override
+    @Async
+    public void csvFoldToEs(CsvToEsDTO csvToEsDTO) {
+        String path = csvToEsDTO.getCsvPath();
+        Set<File> files = dataTransUtils.listFiles(path);
+        for (File f : files) {
+            csvToEsDTO.setCsvPath(f.getPath());
+            csvToEsBulk(csvToEsDTO);
+        }
+    }
+
+    @Override
+    @Async
+    public void csvDeepFoldToEs(CsvToEsDTO csvToEsDTO) {
+        String path = csvToEsDTO.getCsvPath();
+        Set<File> files = dataTransUtils.listFiles(path);
+        for (File f : files) {
+            csvToEsDTO.setCsvPath(f.getPath());
+            csvToEsBulk(csvToEsDTO);
         }
     }
 
@@ -131,7 +156,11 @@ public class DataTransServiceImpl implements DataTransService {
             } else {
                 csvReader.readHeaders();
                 oriHeader = csvReader.getHeaders();
-                headers = elasticSearchUtils.ch2py(oriHeader);
+                if (csvToEsDTO.getIsTitleHasCh()) {
+                    headers = dataTransUtils.ch2py(oriHeader);
+                } else {
+                    headers = oriHeader;
+                }
                 csvReader.setHeaders(headers);
             }
             if (headers.length < 1) {

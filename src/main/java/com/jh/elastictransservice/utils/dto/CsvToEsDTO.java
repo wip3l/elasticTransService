@@ -12,6 +12,7 @@ public class CsvToEsDTO {
     String csvPath;
     String splitWord;
     Boolean isHasTitle;
+    Boolean isTitleHasCh;
     Boolean isCustomTitle;
     String[] title;
     public CsvToEsDTO (CsvToEs csvToEs) {
@@ -19,6 +20,7 @@ public class CsvToEsDTO {
         this.csvPath = csvToEs.getCsvPath();
         this.splitWord = csvToEs.getSplitWord();
         this.isHasTitle = csvToEs.getIsHasTitle();
+        this.isTitleHasCh = csvToEs.getIsTitleHasCh();
         this.isCustomTitle = csvToEs.getIsCustomTitle();
         this.title = csvToEs.getTitle();
     }
