@@ -48,7 +48,6 @@ public class DataTransUtils {
                 throw new RuntimeException(e);
             }
             newStrings[i] = String.valueOf(stringBuilder);
-            System.out.println(newStrings[i]);
         }
         return newStrings;
     }

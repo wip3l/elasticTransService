@@ -23,7 +23,7 @@ public class DataTransController {
     private DataTransService dataTransService;
 
     @PostMapping("/csvTrans")
-    @ApiOperation(value = "单个csv文件解析", notes = "单个csv文件解析")
+    @ApiOperation(value = "单个csv文件解析(测试使用，生产环境请使用bulk接口)", notes = "单个csv文件解析")
     public ResponseData csvTrans (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) {
         dataTransService.csvToEs(new CsvToEsDTO(csvToEs));
         return new ResponseData(200,"正在解析");
@@ -37,7 +37,7 @@ public class DataTransController {
     }
 
     @PostMapping("/csvFoldToEs")
-    @ApiOperation(value = "解析文件该级目录下的所有文件", notes = "解析文件该级目录下的所有文件")
+    @ApiOperation(value = "解析该级目录下的所有文件", notes = "解析文件该级目录下的所有文件")
     public ResponseData csvFoldToEs (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) {
         dataTransService.csvFoldToEs(new CsvToEsDTO(csvToEs));
         return new ResponseData(200,"正在解析");

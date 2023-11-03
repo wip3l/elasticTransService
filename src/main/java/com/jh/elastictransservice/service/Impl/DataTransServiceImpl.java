@@ -112,6 +112,7 @@ public class DataTransServiceImpl implements DataTransService {
         Set<File> files = dataTransUtils.listFiles(path);
         for (File f : files) {
             csvToEsDTO.setCsvPath(f.getPath());
+            log.info("开始解析文件: " + f.getPath());
             csvToEsBulk(csvToEsDTO);
         }
     }
@@ -120,9 +121,10 @@ public class DataTransServiceImpl implements DataTransService {
     @Async
     public void csvDeepFoldToEs(CsvToEsDTO csvToEsDTO) {
         String path = csvToEsDTO.getCsvPath();
-        Set<File> files = dataTransUtils.listFiles(path);
+        Set<File> files = dataTransUtils.listAllFiles(path);
         for (File f : files) {
             csvToEsDTO.setCsvPath(f.getPath());
+            log.info("开始解析文件: " + f.getPath());
             csvToEsBulk(csvToEsDTO);
         }
     }
