@@ -23,7 +23,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -96,6 +98,7 @@ public class DataTransServiceImpl implements DataTransService {
                 updateRequest.doc(jsonMap);
                 updateRequest.docAsUpsert(true);
                 elasticClient.update(updateRequest, RequestOptions.DEFAULT);
+                log.info("解析完成:"+csvToEsDTO.getCsvPath());
             }
 
         } catch (IOException e) {
@@ -213,6 +216,14 @@ public class DataTransServiceImpl implements DataTransService {
             throw new RuntimeException("解析csv文件失败",e);
         }
     }
+
+    @Override
+    public String[] csvLine(String filePath, String splitWord) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        String firstLine = reader.readLine();
+        return firstLine.split(splitWord);
+    }
+
     @Override
     public void deleteRow(String indexName, String id) throws IOException {
         RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();

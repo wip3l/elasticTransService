@@ -22,5 +22,7 @@ public interface DataTransService {
 
     void csvToEsBulk(CsvToEsDTO csvToEsDTO);
 
+    String[] csvLine(String filePath, String splitWord) throws IOException;
+
     void deleteRow(String indexName, String id) throws IOException;
 }

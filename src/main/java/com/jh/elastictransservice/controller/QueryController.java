@@ -8,10 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -26,6 +23,7 @@ public class QueryController {
     @Autowired
     private ElasticQuerySearchService elasticQuerySearchService;
 
+    @CrossOrigin
     @PostMapping("/search")
     @ApiOperation(value = "全文搜索", notes = "全文搜索")
     public ResponseData querySearch (@ApiParam("搜索参数")  @RequestBody QuerySearch querySearch) {
@@ -33,6 +31,7 @@ public class QueryController {
         return new ResponseData(stringObjectMap);
     }
 
+    @CrossOrigin
     @PostMapping("/highSearch")
     @ApiOperation(value = "高级搜索", notes = "高级搜索")
     public ResponseData highQuerySearch (@ApiParam("搜索参数") @RequestBody QuerySearch querySearch) {

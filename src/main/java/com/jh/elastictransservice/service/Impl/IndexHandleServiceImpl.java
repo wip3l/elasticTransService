@@ -9,6 +9,8 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.client.indices.GetIndexResponse;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
@@ -27,6 +29,24 @@ import java.util.Map;
 public class IndexHandleServiceImpl implements IndexHandleService {
     @Autowired
     private ElasticClientUtils elasticClientUtils;
+
+
+    @Override
+    public GetIndexResponse listAllIndex () throws IOException {
+        RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
+        GetIndexRequest request = new GetIndexRequest("*");
+        GetIndexResponse getIndexResponse = elasticClient.indices().get(request, RequestOptions.DEFAULT);
+        return getIndexResponse;
+    }
+
+    @Override
+    public GetIndexResponse getIndexMapping(String indexName) throws IOException {
+        RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
+        GetIndexRequest getIndexRequest = new GetIndexRequest(indexName);
+        return elasticClient.indices().get(getIndexRequest, RequestOptions.DEFAULT);
+
+    }
+
     @Override
     public CreateIndexResponse createIndex(IndexCreateDTO index) throws IOException {
         RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
