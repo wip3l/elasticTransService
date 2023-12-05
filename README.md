@@ -1,6 +1,8 @@
 # elasticTransService
 ## 1. 项目介绍
-一个简单的Elasticsearch服务，用于解析CSV数据导入到Elasticsearch中
+基于Elasticsearch的CSV文件解析、查询服务
+基于HDFS的媒体浏览服务
+
 
 ## 2. 项目结构
 Swagger UI: http://localhost:8080/swagger-ui.html
