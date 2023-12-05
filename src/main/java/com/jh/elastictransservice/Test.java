@@ -14,5 +14,4 @@ public class Test {
     private ElasticClientUtils elasticClientUtils;
 
 
-
 }

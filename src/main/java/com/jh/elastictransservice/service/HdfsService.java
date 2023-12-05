@@ -16,5 +16,7 @@ public interface HdfsService {
     public Map<String, Object> getHdfsCatalog(String path) throws Exception;
     public Map<String ,Object> getHdfsCatalogList(String path,int pageNum,int pageSize) throws Exception;
     public ResponseEntity<InputStreamResource> getHdfsFilePlay(String path) throws Exception;
-    public Map<String ,Object> uploadFilesToHdfs(String path, MultipartFile[] files) throws Exception;
+    public Map<String ,Object> uploadFilesToHdfs(String path, String localFolderPath) throws Exception;
+    public Map<String ,Object> createHdfsDirectory(String path) throws Exception;
+    public Map<String ,Object> deleteHdfsPath(String path) throws Exception;
 }

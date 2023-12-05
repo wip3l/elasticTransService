@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -59,6 +61,7 @@ public class HdfsServiceImpl implements HdfsService {
             map2.put("isFile",isFile);
             map.put(docName, map2);
         }
+        fs.close();
         return map;
     }
     @Override
@@ -93,6 +96,7 @@ public class HdfsServiceImpl implements HdfsService {
         resMap.put("pageList", list);
         resMap.put("pageNum", pageNum);
         resMap.put("pageSize", pageSize);
+        fs.close();
         return resMap;
     }
 
@@ -174,22 +178,90 @@ public class HdfsServiceImpl implements HdfsService {
     }
 
     @Override
-    public Map<String ,Object> uploadFilesToHdfs(String path, MultipartFile[] files) throws Exception {
+    public Map<String ,Object> uploadFilesToHdfs(String path, String localFolderPath) throws Exception {
         Map<String ,Object> resMap = new HashMap<>();
         FileSystem fileSystem = hdfsConn.getFileSystem();
-        Path hdfsPath = new Path(path);
 
-        if (!fileSystem.exists(hdfsPath)) {
-            fileSystem.mkdirs(hdfsPath);
+        String filesPath = URLDecoder.decode(localFolderPath, "UTF-8");
+        File localFolder = new File(localFolderPath);
+        if (localFolder.isDirectory()) {
+//            File[] files = localFolder.listFiles();
+//            if (files != null) {
+//                for (File file : files) {
+//                    if (file.isFile()) {
+//                        Path hdfsFilePath = new Path(path + "/" + file.getName());
+//                        fileSystem.copyFromLocalFile(new Path(file.getAbsolutePath()), hdfsFilePath);
+//                    }
+//                }
+//            }
+
+            uploadFolderContents(fileSystem, localFolder, path);
+            resMap.put("res","上传成功");
+            fileSystem.close();
+        }else{
+            Path localPath = new Path(filesPath);
+            Path hdfsPath = new Path(path + "/" + localPath.getName());
+            fileSystem.copyFromLocalFile(localPath, hdfsPath);
+            fileSystem.close();
+            resMap.put("res","上传成功");
         }
-        for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename();
-            Path hdfsFilePath = new Path(path + "/" + fileName);
-            try (InputStream inputStream = file.getInputStream()) {
-                fileSystem.copyFromLocalFile(false, true, new Path(fileName), hdfsFilePath);
+
+        return resMap;
+    }
+
+    @Override
+    public Map<String, Object> createHdfsDirectory(String path) throws Exception {
+        Map<String ,Object> resMap = new HashMap<>();
+        FileSystem fileSystem = hdfsConn.getFileSystem();
+        Path hdfsDirectory = new Path(path);
+        if (!fileSystem.exists(hdfsDirectory)) {
+            fileSystem.mkdirs(hdfsDirectory);
+            fileSystem.close();
+            resMap.put("res","创建成功");
+        } else {
+            resMap.put("res","目录已存在");
+        }
+        return resMap;
+    }
+
+    @Override
+    public Map<String, Object> deleteHdfsPath(String path) throws Exception {
+        Map<String ,Object> resMap = new HashMap<>();
+        FileSystem fs = hdfsConn.getFileSystem();
+
+        Path hdfsPath = new Path(path);
+        if (fs.exists(hdfsPath)) {
+            if (fs.isDirectory(hdfsPath)) {
+                fs.delete(hdfsPath, true); // 删除文件夹
+            } else {
+                fs.delete(hdfsPath, false); // 删除文件
+            }
+            fs.close();
+            resMap.put("res","删除成功");
+        } else {
+            resMap.put("res","文件或目录不存在");
+        }
+
+        return resMap;
+    }
+
+    private static void uploadFolderContents(FileSystem fs, File folder, String hdfsPath) throws IOException {
+        Map<String ,Object> resMap = new HashMap<>();
+
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    Path hdfsFilePath = new Path(hdfsPath + "/" + file.getName());
+                    fs.copyFromLocalFile(new Path(file.getAbsolutePath()), hdfsFilePath);
+                } else if (file.isDirectory()) {
+                    String newHdfsPath = hdfsPath + "/" + file.getName();
+                    fs.mkdirs(new Path(newHdfsPath));
+                    uploadFolderContents(fs, file, newHdfsPath);
+                }
             }
         }
 
-        return null;
     }
+
 }

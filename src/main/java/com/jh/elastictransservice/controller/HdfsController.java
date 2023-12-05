@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -42,22 +43,35 @@ public class HdfsController {
 
     @CrossOrigin
     @GetMapping("/getHdfsFilePlay")
-    @ApiOperation(value = "HDFS文件地址和目录", notes = "获取HDFS文件地址和目录")
+    @ApiOperation(value = "HDFS文件地址和目录", notes = "查看HDFS文件")
     public ResponseEntity<InputStreamResource> getHdfsFilePlay(@RequestParam(required=true) String path)throws Exception{
         return hdfsService.getHdfsFilePlay(path);
     }
 
     @CrossOrigin
     @GetMapping("/uploadFilesToHdfs")
-    @ApiOperation(value = "HDFS文件地址和目录", notes = "获取HDFS文件地址和目录")
+    @ApiOperation(value = "HDFS文件地址和目录", notes = "上传HDFS文件")
     public ResponseData uploadFilesToHdfs(
-            @RequestParam(required=false, defaultValue = "/") String path,
-            @RequestParam(required=true) MultipartFile[] files
+            @RequestParam(required=true) String path,
+            @RequestParam(required=true) String localFolderPath
     )throws Exception{
-        Map<String ,Object> res =  hdfsService.uploadFilesToHdfs(path,files);
+        Map<String ,Object> res =  hdfsService.uploadFilesToHdfs(path, localFolderPath);
         return new ResponseData(res);
     }
 
-
+    @CrossOrigin
+    @GetMapping("/createHdfsDirectory")
+    @ApiOperation(value = "HDFS文件地址和目录", notes = "创建HDFS目录")
+    public ResponseData createHdfsDirectory(@RequestParam(required=true) String path)throws Exception{
+        Map<String ,Object> res =  hdfsService.createHdfsDirectory(path);
+        return new ResponseData(res);
+    }
+    @CrossOrigin
+    @GetMapping("/deleteHdfsPath")
+    @ApiOperation(value = "HDFS文件地址和目录", notes = "删除HDFS目录或文件")
+    public ResponseData deleteHdfsPath(@RequestParam(required=true) String path)throws Exception{
+        Map<String ,Object> res =  hdfsService.deleteHdfsPath(path);
+        return new ResponseData(res);
+    }
 
 }
