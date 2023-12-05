@@ -9,10 +9,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @SpringBootApplication
 @EnableAsync
-public class ElasticTranseServiceApplication {
+public class ElasticTransServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ElasticTranseServiceApplication.class, args);
+        SpringApplication.run(ElasticTransServiceApplication.class, args);
     }
 
 }
