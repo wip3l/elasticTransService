@@ -1,6 +1,6 @@
 package com.jh.elastictransservice.service;
 
-import com.jh.elastictransservice.utils.dto.IndexCreateDTO;
+import com.jh.elastictransservice.common.dto.IndexCreateDTO;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexResponse;

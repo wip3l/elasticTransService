@@ -2,7 +2,7 @@ package com.jh.elastictransservice.service.Impl;
 
 import com.jh.elastictransservice.service.ElasticQuerySearchService;
 import com.jh.elastictransservice.utils.ElasticSearchUtils;
-import com.jh.elastictransservice.utils.dto.QuerySearchDTO;
+import com.jh.elastictransservice.common.dto.QuerySearchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

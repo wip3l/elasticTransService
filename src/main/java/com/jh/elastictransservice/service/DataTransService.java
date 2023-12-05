@@ -1,6 +1,6 @@
 package com.jh.elastictransservice.service;
 
-import com.jh.elastictransservice.utils.dto.CsvToEsDTO;
+import com.jh.elastictransservice.common.dto.CsvToEsDTO;
 import org.springframework.scheduling.annotation.Async;
 
 import java.io.IOException;
@@ -10,17 +10,17 @@ import java.io.IOException;
  */
 public interface DataTransService {
 
-    void csvToEs(CsvToEsDTO csvToEsDTO);
+    void csvToEs(CsvToEsDTO csvToEsDTO) throws IOException;
 
     void newCsv(String fileName) throws IOException;
 
     @Async
-    void csvFoldToEs(CsvToEsDTO csvToEsDTO);
+    void csvFoldToEs(CsvToEsDTO csvToEsDTO) throws IOException;
 
     @Async
-    void csvDeepFoldToEs(CsvToEsDTO csvToEsDTO);
+    void csvDeepFoldToEs(CsvToEsDTO csvToEsDTO) throws IOException;
 
-    void csvToEsBulk(CsvToEsDTO csvToEsDTO);
+    void csvToEsBulk(CsvToEsDTO csvToEsDTO) throws IOException;
 
     String[] csvLine(String filePath, String splitWord) throws IOException;
 

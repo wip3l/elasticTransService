@@ -1,0 +1,45 @@
+server:
+    port: 8080
+spring:
+    datasource:
+        name: druidDataSource
+        type: com.alibaba.druid.pool.DruidDataSource
+        druid:
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+            username: root
+            password: 1122333
+            initial-size: 50
+            min-idle: 50
+            max-active: 100
+            max-wait: 60000
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            validation-query: select 1 from dual
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            pool-prepared-statements: false
+            max-open-prepared-statements: 50
+            max-pool-prepared-statement-per-connection-size: 20
+            filters: stat,wall,slf4j,config
+mybatis:
+    configuration:
+        # 启动结果集自动映射  NONE 表示取消自动映射；PARTIAL 只会自动映射没有定义嵌套结果集映射的结果集。 FULL 会自动映射任意复杂的结果集（无论是否嵌套）。默认是partial，这是一种全局设置
+        auto-mapping-behavior: partial
+        # 开启驼峰映射
+        map-underscore-to-camel-case: true
+        # 控制台打印sql语句
+        #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+elasticsearch:
+    auth: false
+    bulkSize: 10000
+    host: localhost
+    password: 123456
+    port: 9200
+    username: root
+hdfs:
+    address: hdfs://192.168.56.191:9000
+    web: http://192.168.56.191:50070/webhdfs/v1
+
+

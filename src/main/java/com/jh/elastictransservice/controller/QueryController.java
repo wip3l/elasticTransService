@@ -2,8 +2,8 @@ package com.jh.elastictransservice.controller;
 
 import com.jh.elastictransservice.result.ResponseData;
 import com.jh.elastictransservice.service.ElasticQuerySearchService;
-import com.jh.elastictransservice.utils.dto.QuerySearchDTO;
-import com.jh.elastictransservice.utils.vo.QuerySearch;
+import com.jh.elastictransservice.common.dto.QuerySearchDTO;
+import com.jh.elastictransservice.common.vo.QuerySearch;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

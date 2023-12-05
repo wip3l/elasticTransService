@@ -1,6 +1,6 @@
-package com.jh.elastictransservice.utils.dto;
+package com.jh.elastictransservice.common.dto;
 
-import com.jh.elastictransservice.utils.vo.IndexCreate;
+import com.jh.elastictransservice.common.vo.IndexCreate;
 import lombok.Data;
 
 import java.util.List;

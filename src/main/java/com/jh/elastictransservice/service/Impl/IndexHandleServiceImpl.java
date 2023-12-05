@@ -2,7 +2,7 @@ package com.jh.elastictransservice.service.Impl;
 
 import com.jh.elastictransservice.service.IndexHandleService;
 import com.jh.elastictransservice.utils.ElasticClientUtils;
-import com.jh.elastictransservice.utils.dto.IndexCreateDTO;
+import com.jh.elastictransservice.common.dto.IndexCreateDTO;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;

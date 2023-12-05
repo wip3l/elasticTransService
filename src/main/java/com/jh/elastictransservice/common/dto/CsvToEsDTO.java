@@ -1,6 +1,6 @@
-package com.jh.elastictransservice.utils.dto;
+package com.jh.elastictransservice.common.dto;
 
-import com.jh.elastictransservice.utils.vo.CsvToEs;
+import com.jh.elastictransservice.common.vo.CsvToEs;
 import lombok.Data;
 
 /**
@@ -8,6 +8,7 @@ import lombok.Data;
  */
 @Data
 public class CsvToEsDTO {
+    Long taskId;
     String indexName;
     String csvPath;
     String splitWord;

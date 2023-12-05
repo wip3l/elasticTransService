@@ -1,6 +1,6 @@
-package com.jh.elastictransservice.utils.dto;
+package com.jh.elastictransservice.common.dto;
 
-import com.jh.elastictransservice.utils.vo.QuerySearch;
+import com.jh.elastictransservice.common.vo.QuerySearch;
 import lombok.Data;
 
 import java.util.List;

@@ -2,10 +2,13 @@ package com.jh.elastictransservice.service.Impl;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
+import com.jh.elastictransservice.common.pojo.TaskInfo;
+import com.jh.elastictransservice.mapper.TaskInfoMapper;
+import com.jh.elastictransservice.result.ResponseData;
 import com.jh.elastictransservice.service.DataTransService;
 import com.jh.elastictransservice.utils.DataTransUtils;
 import com.jh.elastictransservice.utils.ElasticClientUtils;
-import com.jh.elastictransservice.utils.dto.CsvToEsDTO;
+import com.jh.elastictransservice.common.dto.CsvToEsDTO;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -43,10 +46,12 @@ public class DataTransServiceImpl implements DataTransService {
     private ElasticClientUtils elasticClientUtils;
     @Autowired
     private DataTransUtils dataTransUtils;
+    @Autowired
+    private TaskInfoMapper taskInfoMapper;
 
     @Override
     @Async
-    public void csvToEs(CsvToEsDTO csvToEsDTO) {
+    public void csvToEs(CsvToEsDTO csvToEsDTO) throws IOException {
         //初始化client
         RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
         //判断index是否存在
@@ -105,12 +110,13 @@ public class DataTransServiceImpl implements DataTransService {
             log.error("解析csv文件失败", e);
             throw new RuntimeException("解析csv文件失败",e);
         }
+        elasticClient.close();
     }
 
 
     @Override
     @Async
-    public void csvFoldToEs(CsvToEsDTO csvToEsDTO) {
+    public void csvFoldToEs(CsvToEsDTO csvToEsDTO) throws IOException {
         String path = csvToEsDTO.getCsvPath();
         Set<File> files = dataTransUtils.listFiles(path);
         for (File f : files) {
@@ -122,7 +128,7 @@ public class DataTransServiceImpl implements DataTransService {
 
     @Override
     @Async
-    public void csvDeepFoldToEs(CsvToEsDTO csvToEsDTO) {
+    public void csvDeepFoldToEs(CsvToEsDTO csvToEsDTO) throws IOException {
         String path = csvToEsDTO.getCsvPath();
         Set<File> files = dataTransUtils.listAllFiles(path);
         for (File f : files) {
@@ -133,22 +139,32 @@ public class DataTransServiceImpl implements DataTransService {
     }
 
     @Override
-    @Async
-    public void csvToEsBulk(CsvToEsDTO csvToEsDTO) {
+    public void csvToEsBulk(CsvToEsDTO csvToEsDTO) throws IOException {
         //初始化client
         RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
         //判断index是否存在
         GetIndexRequest request = new GetIndexRequest(csvToEsDTO.getIndexName());
         try {
             if (!elasticClient.indices().exists(request, RequestOptions.DEFAULT)) {
-                throw new RuntimeException("index不存在，请先创建index");
+                throw new RuntimeException("请检查index配置");
             }
         } catch (IOException e) {
             throw new RuntimeException("无法确认index是否存在",e);
         }
+        elasticClient.close();
+        csvToEsBulkHandle(csvToEsDTO);
+    }
 
+    @Async
+    public void csvToEsBulkHandle (CsvToEsDTO csvToEsDTO) throws IOException {
+        //初始化client
+        RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
+        String id = UUID.randomUUID().toString();
+        TaskInfo taskInfo = new TaskInfo(id, csvToEsDTO.getCsvPath(),
+                csvToEsDTO.getIndexName(), "正在解析", new Date());
         //读取csv文件
         try {
+            taskInfoMapper.insert(taskInfo);
             CsvReader csvReader = new CsvReader(csvToEsDTO.getCsvPath(), csvToEsDTO.getSplitWord().charAt(0),
                     StandardCharsets.UTF_8);
             //设置header
@@ -169,6 +185,8 @@ public class DataTransServiceImpl implements DataTransService {
                 csvReader.setHeaders(headers);
             }
             if (headers.length < 1) {
+                taskInfo.setTaskState("解析出错");
+                taskInfoMapper.updateByPrimaryKey(taskInfo);
                 throw new RuntimeException("请检查csv文件Title配置");
             }
 
@@ -195,26 +213,31 @@ public class DataTransServiceImpl implements DataTransService {
                 //分批次提交，数量控制
                 if (bulkRequest.numberOfActions() % bulkSize == 0) {
                     total = total + bulkRequest.numberOfActions();
-                    log.info("缓存数据达到bulkSize阈值:{} 开始本次提交", bulkRequest.numberOfActions());
+                    //log.info("缓存数据达到bulkSize阈值:{} 开始本次提交", bulkRequest.numberOfActions());
                     BulkResponse bulkResponse = elasticClient.bulk(bulkRequest, RequestOptions.DEFAULT);
-                    log.info("es同步数据结果是否出错:{}", bulkResponse.hasFailures());
-                    log.info("es一共同步数据数量:{}", total);
+                    //log.info("es同步数据结果是否出错:{}", bulkResponse.hasFailures());
+                    //log.info("es一共同步数据数量:{}", total);
                     bulkRequest = new BulkRequest();
                 }
             }
             //最后提交
-            log.info("提交最后一批数据:{} ", bulkRequest.numberOfActions());
+            //log.info("提交最后一批数据:{} ", bulkRequest.numberOfActions());
             total = total + bulkRequest.numberOfActions();
             BulkResponse bulkResponse = elasticClient.bulk(bulkRequest, RequestOptions.DEFAULT);
-            log.info("es同步数据结果是否出错:{}", bulkResponse.hasFailures());
+            //log.info("es同步数据结果是否出错:{}", bulkResponse.hasFailures());
             long endTimeMillis = System.currentTimeMillis();
             log.info("es本次同步数据数量:{}", total);
             log.info("es同步数据耗时:{} ms", endTimeMillis - startTimeMillis);
+            taskInfo.setTaskState("解析完成");
+            taskInfoMapper.updateByPrimaryKey(taskInfo);
 
         } catch (IOException e) {
+            taskInfo.setTaskState("解析出错");
+            taskInfoMapper.updateByPrimaryKey(taskInfo);
             log.error("解析csv文件失败", e);
             throw new RuntimeException("解析csv文件失败",e);
         }
+        elasticClient.close();
     }
 
     @Override

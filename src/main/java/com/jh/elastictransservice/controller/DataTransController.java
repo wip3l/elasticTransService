@@ -1,9 +1,9 @@
 package com.jh.elastictransservice.controller;
 
+import com.jh.elastictransservice.common.dto.CsvToEsDTO;
+import com.jh.elastictransservice.common.vo.CsvToEs;
 import com.jh.elastictransservice.result.ResponseData;
 import com.jh.elastictransservice.service.DataTransService;
-import com.jh.elastictransservice.utils.dto.CsvToEsDTO;
-import com.jh.elastictransservice.utils.vo.CsvToEs;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -34,7 +34,7 @@ public class DataTransController {
     @CrossOrigin
     @PostMapping("/csvTrans")
     @ApiOperation(value = "单个csv文件解析(测试使用，生产环境请使用bulk接口)", notes = "单个csv文件解析")
-    public ResponseData csvTrans (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) {
+    public ResponseData csvTrans (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
         dataTransService.csvToEs(new CsvToEsDTO(csvToEs));
         return new ResponseData(200,"正在解析");
     }
@@ -42,7 +42,7 @@ public class DataTransController {
     @CrossOrigin
     @PostMapping("/csvTransBulk")
     @ApiOperation(value = "单个csv文件解析的bulk版本", notes = "单个csv文件解析的bulk版本")
-    public ResponseData csvTransBulk (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) {
+    public ResponseData csvTransBulk (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
         dataTransService.csvToEsBulk(new CsvToEsDTO(csvToEs));
         return new ResponseData(200,"正在解析");
     }
@@ -50,7 +50,7 @@ public class DataTransController {
     @CrossOrigin
     @PostMapping("/csvFoldToEs")
     @ApiOperation(value = "解析该级目录下的所有文件", notes = "解析文件该级目录下的所有文件")
-    public ResponseData csvFoldToEs (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) {
+    public ResponseData csvFoldToEs (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
         dataTransService.csvFoldToEs(new CsvToEsDTO(csvToEs));
         return new ResponseData(200,"正在解析");
     }
@@ -58,7 +58,7 @@ public class DataTransController {
     @CrossOrigin
     @PostMapping("/csvDeepFoldToEs")
     @ApiOperation(value = "遍历该目录到最底层的所有文件并解析", notes = "遍历该目录到最底层的所有文件并解析")
-    public ResponseData csvDeepFoldToEs (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) {
+    public ResponseData csvDeepFoldToEs (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
         dataTransService.csvDeepFoldToEs(new CsvToEsDTO(csvToEs));
         return new ResponseData(200,"正在解析");
     }

@@ -1,4 +1,4 @@
-package com.jh.elastictransservice.utils.vo;
+package com.jh.elastictransservice.common.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
