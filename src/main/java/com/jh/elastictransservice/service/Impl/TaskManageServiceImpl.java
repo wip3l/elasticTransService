@@ -28,7 +28,7 @@ public class TaskManageServiceImpl implements TaskManageService {
     public PageInfo<TaskInfo> getAllTask(int pageNum, int pageSize){
         // 设置分页参数
         PageHelper.startPage(pageNum, pageSize);
-        List<TaskInfo> tasks = taskInfoMapper.getTasks();
+        List<TaskInfo> tasks = taskInfoMapper.selectAll();
         PageInfo<TaskInfo> pageInfo = new PageInfo<>(tasks);
         return pageInfo;
     }
@@ -46,9 +46,9 @@ public class TaskManageServiceImpl implements TaskManageService {
         csvToEs.setTitle(taskInfo.getTitle().split(taskInfo.getSplit()));
         csvToEs.setIndexName(taskInfo.getTaskType());
         csvToEs.setSplitWord(taskInfo.getSplit());
-        csvToEs.setIsHasTitle(taskInfo.getIsHasTitle());
-        csvToEs.setIsCustomTitle(taskInfo.getIsCustomTitle());
-        csvToEs.setIsTitleHasCh(taskInfo.getIsTitleHasCh());
+        csvToEs.setIsHasTitle(taskInfo.getIsHasTitle().equals(1));
+        csvToEs.setIsCustomTitle(taskInfo.getIsCustomTitle().equals(1));
+        csvToEs.setIsTitleHasCh(taskInfo.getIsTitleHasCh().equals(1));
         dataTransService.csvToEsBulk(new CsvToEsDTO(csvToEs));
     }
 

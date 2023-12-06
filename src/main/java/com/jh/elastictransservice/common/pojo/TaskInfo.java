@@ -22,14 +22,14 @@ public class TaskInfo implements Serializable {
     private String taskType;
     private String taskState;
     private String split;
-    private Boolean isHasTitle;
-    private Boolean isTitleHasCh;
-    private Boolean isCustomTitle;
+    private Integer isHasTitle;
+    private Integer isTitleHasCh;
+    private Integer isCustomTitle;
     private String title;
     private Date startTime;
     private Date finishTime;
     public TaskInfo(String id, String taskName, String taskType, String taskState, String split,
-                    Boolean isHasTitle, Boolean isTitleHasCh, Boolean isCustomTitle, String[] title, Date startTime) {
+                    Integer isHasTitle, Integer isTitleHasCh, Integer isCustomTitle, String[] title, Date startTime) {
         this.id = id;
         this.taskName = taskName;
         this.taskType = taskType;

@@ -162,7 +162,8 @@ public class DataTransServiceImpl implements DataTransService {
         String id = UUID.randomUUID().toString();
         TaskInfo taskInfo = new TaskInfo(id, csvToEsDTO.getCsvPath(),
                 csvToEsDTO.getIndexName(), "正在解析", csvToEsDTO.getSplitWord(),
-                csvToEsDTO.getIsHasTitle(), csvToEsDTO.getIsTitleHasCh(), csvToEsDTO.getIsCustomTitle(),
+                csvToEsDTO.getIsHasTitle() ? 1 : 0, csvToEsDTO.getIsTitleHasCh() ? 1 : 0,
+                csvToEsDTO.getIsCustomTitle() ? 1 : 0,
                 csvToEsDTO.getTitle(), new Date());
         //读取csv文件
         try {

@@ -1,9 +1,9 @@
 package com.jh.elastictransservice;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
+import tk.mybatis.spring.annotation.MapperScan;
 
 /**
  * @author liqijian
