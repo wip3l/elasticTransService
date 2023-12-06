@@ -36,6 +36,7 @@ public class IndexHandleServiceImpl implements IndexHandleService {
         RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
         GetIndexRequest request = new GetIndexRequest("*");
         GetIndexResponse getIndexResponse = elasticClient.indices().get(request, RequestOptions.DEFAULT);
+        elasticClient.close();
         return getIndexResponse;
     }
 
@@ -43,8 +44,9 @@ public class IndexHandleServiceImpl implements IndexHandleService {
     public GetIndexResponse getIndexMapping(String indexName) throws IOException {
         RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
         GetIndexRequest getIndexRequest = new GetIndexRequest(indexName);
-        return elasticClient.indices().get(getIndexRequest, RequestOptions.DEFAULT);
-
+        GetIndexResponse getIndexResponse = elasticClient.indices().get(getIndexRequest, RequestOptions.DEFAULT);
+        elasticClient.close();
+        return getIndexResponse;
     }
 
     @Override
@@ -72,14 +74,18 @@ public class IndexHandleServiceImpl implements IndexHandleService {
 
         mapping.put("properties", properties);
         request.mapping(mapping);
-        return elasticClient.indices().create(request, RequestOptions.DEFAULT);
+        CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
+        elasticClient.close();
+        return createIndexResponse;
     }
 
     @Override
     public AcknowledgedResponse deleteIndex(String indexName) throws IOException {
         RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
-        return elasticClient.indices().
+        AcknowledgedResponse delete = elasticClient.indices().
                 delete(new DeleteIndexRequest(indexName), RequestOptions.DEFAULT);
+        elasticClient.close();
+        return delete;
     }
 
     @Override
@@ -90,6 +96,7 @@ public class IndexHandleServiceImpl implements IndexHandleService {
         deleteRequest.setRefresh(true);
         RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
         elasticClient.deleteByQuery(deleteRequest,RequestOptions.DEFAULT);
+        elasticClient.close();
     }
 
 }
