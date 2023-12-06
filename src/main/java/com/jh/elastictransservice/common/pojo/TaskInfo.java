@@ -21,13 +21,24 @@ public class TaskInfo implements Serializable {
     private String taskName;
     private String taskType;
     private String taskState;
+    private String split;
+    private Boolean isHasTitle;
+    private Boolean isTitleHasCh;
+    private Boolean isCustomTitle;
+    private String title;
     private Date startTime;
     private Date finishTime;
-    public TaskInfo(String id, String taskName, String taskType, String taskState, Date startTime) {
+    public TaskInfo(String id, String taskName, String taskType, String taskState, String split,
+                    Boolean isHasTitle, Boolean isTitleHasCh, Boolean isCustomTitle, String[] title, Date startTime) {
         this.id = id;
         this.taskName = taskName;
         this.taskType = taskType;
         this.taskState = taskState;
+        this.split = split;
+        this.isHasTitle = isHasTitle;
+        this.isTitleHasCh = isTitleHasCh;
+        this.isCustomTitle = isCustomTitle;
+        this.title = String.join(split,title);
         this.startTime = startTime;
     }
 

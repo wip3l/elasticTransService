@@ -161,7 +161,9 @@ public class DataTransServiceImpl implements DataTransService {
         RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
         String id = UUID.randomUUID().toString();
         TaskInfo taskInfo = new TaskInfo(id, csvToEsDTO.getCsvPath(),
-                csvToEsDTO.getIndexName(), "正在解析", new Date());
+                csvToEsDTO.getIndexName(), "正在解析", csvToEsDTO.getSplitWord(),
+                csvToEsDTO.getIsHasTitle(), csvToEsDTO.getIsTitleHasCh(), csvToEsDTO.getIsCustomTitle(),
+                csvToEsDTO.getTitle(), new Date());
         //读取csv文件
         try {
             taskInfoMapper.insert(taskInfo);
