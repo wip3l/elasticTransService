@@ -20,7 +20,9 @@ public class TaskInfo implements Serializable {
     private String id;
     private String taskName;
     private String taskType;
-    private String taskState;
+    //0解析中；1解析完成；2解析失败
+    private Integer taskState;
+    private String taskStateName;
     private String split;
     private Integer isHasTitle;
     private Integer isTitleHasCh;
@@ -28,18 +30,5 @@ public class TaskInfo implements Serializable {
     private String title;
     private Long startTime;
     private Long finishTime;
-//    public TaskInfo(String id, String taskName, String taskType, String taskState, String split,
-//                    Integer isHasTitle, Integer isTitleHasCh, Integer isCustomTitle, String[] title, Long startTime) {
-//        this.id = id;
-//        this.taskName = taskName;
-//        this.taskType = taskType;
-//        this.taskState = taskState;
-//        this.split = split;
-//        this.isHasTitle = isHasTitle;
-//        this.isTitleHasCh = isTitleHasCh;
-//        this.isCustomTitle = isCustomTitle;
-//        this.title = String.join(split,title);
-//        this.startTime = startTime;
-//    }
 
 }

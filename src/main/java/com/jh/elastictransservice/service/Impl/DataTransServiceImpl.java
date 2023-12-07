@@ -164,7 +164,8 @@ public class DataTransServiceImpl implements DataTransService {
         taskInfo.setId(id);
         taskInfo.setTaskName(csvToEsDTO.getCsvPath());
         taskInfo.setSplit(csvToEsDTO.getSplitWord());
-        taskInfo.setTaskState("正在解析");
+        taskInfo.setTaskState(0);
+        taskInfo.setTaskStateName("解析中");
         taskInfo.setTaskType(csvToEsDTO.getIndexName());
         taskInfo.setTitle(String.join(csvToEsDTO.getSplitWord(),csvToEsDTO.getTitle()));
         taskInfo.setStartTime(System.currentTimeMillis());
@@ -194,7 +195,8 @@ public class DataTransServiceImpl implements DataTransService {
                 csvReader.setHeaders(headers);
             }
             if (headers.length < 1) {
-                taskInfo.setTaskState("解析出错");
+                taskInfo.setTaskStateName("解析出错");
+                taskInfo.setTaskState(2);
                 taskInfoMapper.updateByPrimaryKey(taskInfo);
                 throw new RuntimeException("请检查csv文件Title配置");
             }
@@ -237,12 +239,14 @@ public class DataTransServiceImpl implements DataTransService {
             long endTimeMillis = System.currentTimeMillis();
             log.info("es本次同步数据数量:{}", total);
             log.info("es同步数据耗时:{} ms", endTimeMillis - startTimeMillis);
-            taskInfo.setTaskState("解析完成");
+            taskInfo.setTaskState(1);
+            taskInfo.setTaskStateName("解析完成");
             taskInfo.setFinishTime(System.currentTimeMillis());
             taskInfoMapper.updateByPrimaryKey(taskInfo);
 
         } catch (IOException e) {
-            taskInfo.setTaskState("解析出错");
+            taskInfo.setTaskStateName("解析出错");
+            taskInfo.setTaskState(2);
             taskInfoMapper.updateByPrimaryKey(taskInfo);
             log.error("解析csv文件失败", e);
             throw new RuntimeException("解析csv文件失败",e);
