@@ -94,7 +94,7 @@ public class IndexHandleServiceImpl implements IndexHandleService {
     public HashMap<Object, Object> docStatic() throws IOException {
         HashMap<Object, Object> docStaticMap = new HashMap<>();
         RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
-        GetIndexRequest request = new GetIndexRequest();
+        GetIndexRequest request = new GetIndexRequest("*");
         GetIndexResponse getIndexResponse = elasticClient.indices().get(request, RequestOptions.DEFAULT);
         String[] indexNames = getIndexResponse.getIndices();
         for (String indexName : indexNames) {
