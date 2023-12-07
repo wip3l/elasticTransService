@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author liqijian
@@ -66,13 +67,15 @@ public class IndexHandleServiceImpl implements IndexHandleService {
         Map<String, Object> properties = new HashMap<>();
 
         //遍历mapping
-        index.getMapping().forEach(map -> {
-            map.forEach((k, v) -> {
-                Map<String, String> key = new HashMap<>();
-                key.put("type", v);
-                properties.put(k, key);
+        if (Objects.nonNull(index.getMapping())) {
+            index.getMapping().forEach(map -> {
+                map.forEach((k, v) -> {
+                    Map<String, String> key = new HashMap<>();
+                    key.put("type", v);
+                    properties.put(k, key);
+                });
             });
-        });
+        }
 
         mapping.put("properties", properties);
         request.mapping(mapping);
