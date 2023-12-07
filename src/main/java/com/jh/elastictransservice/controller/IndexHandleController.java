@@ -1,5 +1,6 @@
 package com.jh.elastictransservice.controller;
 
+import com.jh.elastictransservice.result.ExceptionMsg;
 import com.jh.elastictransservice.result.ResponseData;
 import com.jh.elastictransservice.service.IndexHandleService;
 import com.jh.elastictransservice.common.dto.IndexCreateDTO;
@@ -30,7 +31,7 @@ public class IndexHandleController {
     @PostMapping("/create")
     public ResponseData createIndex(@ApiParam("索引参数") @RequestBody @Valid IndexCreate index) throws IOException {
         CreateIndexResponse response = indexHandleService.createIndex(new IndexCreateDTO(index));
-        return new ResponseData(response.isAcknowledged()? 200: 500);
+        return new ResponseData(response.isAcknowledged()? ExceptionMsg.SUCCESS: ExceptionMsg.ERROR);
     }
 
     @CrossOrigin
@@ -38,7 +39,7 @@ public class IndexHandleController {
     @GetMapping("/listAllIndices")
     public ResponseData listAllIndices() throws IOException {
         GetIndexResponse getIndexResponse = indexHandleService.listAllIndex();
-        return new ResponseData(200,"获取成功",getIndexResponse.getIndices());
+        return new ResponseData(getIndexResponse.getIndices(),ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin
@@ -46,14 +47,14 @@ public class IndexHandleController {
     @PostMapping("/listMapping")
     public ResponseData listMapping (@ApiParam("索引名称") @RequestParam String indexName) throws IOException {
         GetIndexResponse indexMapping = indexHandleService.getIndexMapping(indexName);
-        return new ResponseData(200,"获取成功",indexMapping.getMappings());
+        return new ResponseData(indexMapping.getMappings(),ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin
     @ApiOperation(value = "删除索引", notes = "删除索引")
     @DeleteMapping("/delete")
     public ResponseData deleteIndex(@ApiParam("索引名称") @RequestParam String indexName) throws IOException {
-        return new ResponseData(indexHandleService.deleteIndex(indexName).isAcknowledged()? 200: 500);
+        return new ResponseData(indexHandleService.deleteIndex(indexName).isAcknowledged()? ExceptionMsg.SUCCESS: ExceptionMsg.ERROR);
     }
 
     @CrossOrigin
@@ -61,7 +62,7 @@ public class IndexHandleController {
     @PostMapping("/truncate")
     public ResponseData truncateIndex(@ApiParam("索引名称") @RequestParam String indexName) throws IOException {
         indexHandleService.deleteAll(indexName);
-        return new ResponseData(200,"正在清空索引数据： " + indexName);
+        return new ResponseData(ExceptionMsg.SUCCESS.getCode(),"正在清空索引数据： " + indexName);
     }
 
 }

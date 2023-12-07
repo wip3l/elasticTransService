@@ -1,8 +1,11 @@
 package com.jh.elastictransservice.result;
 
+import lombok.Getter;
+
 /**
  * @author liqijian
  */
+@Getter
 public class ResponseData extends Response{
     private Object data;
 
@@ -43,10 +46,6 @@ public class ResponseData extends Response{
     public ResponseData(Object data, int responseCode, String responseMsg) {
         super(responseCode, responseMsg);
         this.data = data;
-    }
-
-    public Object getData() {
-        return data;
     }
 
     public ResponseData setData(Object data) {

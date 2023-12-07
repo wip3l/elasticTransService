@@ -1,8 +1,11 @@
 package com.jh.elastictransservice.result;
 
+import lombok.Getter;
+
 /**
  * @author liqijian
  */
+@Getter
 public enum ExceptionMsg {
     SUCCESS(200, "操作成功"),
     ERROR(500, "操作失败"),
@@ -25,11 +28,4 @@ public enum ExceptionMsg {
         }
 
 
-    public int getCode() {
-        return code;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
 }

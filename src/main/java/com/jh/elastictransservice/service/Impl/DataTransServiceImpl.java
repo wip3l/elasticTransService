@@ -2,13 +2,12 @@ package com.jh.elastictransservice.service.Impl;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
+import com.jh.elastictransservice.common.dto.CsvToEsDTO;
 import com.jh.elastictransservice.common.pojo.TaskInfo;
 import com.jh.elastictransservice.mapper.TaskInfoMapper;
-import com.jh.elastictransservice.result.ResponseData;
 import com.jh.elastictransservice.service.DataTransService;
 import com.jh.elastictransservice.utils.DataTransUtils;
 import com.jh.elastictransservice.utils.ElasticClientUtils;
-import com.jh.elastictransservice.common.dto.CsvToEsDTO;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;

@@ -1,18 +1,15 @@
 package com.jh.elastictransservice.controller;
 
+import com.jh.elastictransservice.result.ExceptionMsg;
 import com.jh.elastictransservice.result.ResponseData;
 import com.jh.elastictransservice.service.HdfsService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URLEncoder;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,7 +35,7 @@ public class HdfsController {
 
 //        Map<String, Object> res =  hdfsService.getHdfsCatalog(path);
         Map<String ,Object> res =  hdfsService.getHdfsCatalogList(path,pageNum,pageSize);
-        return new ResponseData(res);
+        return new ResponseData(res, ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin
@@ -56,7 +53,7 @@ public class HdfsController {
             @RequestParam(required=true) String localFolderPath
     )throws Exception{
         Map<String ,Object> res =  hdfsService.uploadFilesToHdfs(path, localFolderPath);
-        return new ResponseData(res);
+        return new ResponseData(res,ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin
@@ -64,14 +61,14 @@ public class HdfsController {
     @ApiOperation(value = "HDFS文件地址和目录", notes = "创建HDFS目录")
     public ResponseData createHdfsDirectory(@RequestParam(required=true) String path)throws Exception{
         Map<String ,Object> res =  hdfsService.createHdfsDirectory(path);
-        return new ResponseData(res);
+        return new ResponseData(res,ExceptionMsg.SUCCESS);
     }
     @CrossOrigin
     @GetMapping("/deleteHdfsPath")
     @ApiOperation(value = "HDFS文件地址和目录", notes = "删除HDFS目录或文件")
     public ResponseData deleteHdfsPath(@RequestParam(required=true) String path)throws Exception{
         Map<String ,Object> res =  hdfsService.deleteHdfsPath(path);
-        return new ResponseData(res);
+        return new ResponseData(res,ExceptionMsg.SUCCESS);
     }
 
 }

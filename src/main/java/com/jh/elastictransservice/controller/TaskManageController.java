@@ -2,7 +2,6 @@ package com.jh.elastictransservice.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.jh.elastictransservice.common.pojo.TaskInfo;
-import com.jh.elastictransservice.mapper.TaskInfoMapper;
 import com.jh.elastictransservice.result.ResponseData;
 import com.jh.elastictransservice.service.TaskManageService;
 import io.swagger.annotations.Api;

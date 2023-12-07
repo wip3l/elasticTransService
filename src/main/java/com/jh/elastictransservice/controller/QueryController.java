@@ -1,5 +1,6 @@
 package com.jh.elastictransservice.controller;
 
+import com.jh.elastictransservice.result.ExceptionMsg;
 import com.jh.elastictransservice.result.ResponseData;
 import com.jh.elastictransservice.service.ElasticQuerySearchService;
 import com.jh.elastictransservice.common.dto.QuerySearchDTO;
@@ -28,7 +29,7 @@ public class QueryController {
     @ApiOperation(value = "全文搜索", notes = "全文搜索")
     public ResponseData querySearch (@ApiParam("搜索参数")  @RequestBody QuerySearch querySearch) {
         Map<String, Object> stringObjectMap = elasticQuerySearchService.querySearch(new QuerySearchDTO(querySearch));
-        return new ResponseData(stringObjectMap);
+        return new ResponseData(stringObjectMap, ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin
@@ -36,6 +37,6 @@ public class QueryController {
     @ApiOperation(value = "高级搜索", notes = "高级搜索")
     public ResponseData highQuerySearch (@ApiParam("搜索参数") @RequestBody QuerySearch querySearch) {
         Map<String, Object> stringObjectMap = elasticQuerySearchService.highQuerySearch(new QuerySearchDTO(querySearch));
-        return new ResponseData(stringObjectMap);
+        return new ResponseData(stringObjectMap,ExceptionMsg.SUCCESS);
     }
 }

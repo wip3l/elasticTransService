@@ -2,10 +2,9 @@ package com.jh.elastictransservice.common.pojo;
 
 import lombok.Data;
 
-import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * @author liqijian

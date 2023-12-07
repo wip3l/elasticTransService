@@ -2,6 +2,7 @@ package com.jh.elastictransservice.controller;
 
 import com.jh.elastictransservice.common.dto.CsvToEsDTO;
 import com.jh.elastictransservice.common.vo.CsvToEs;
+import com.jh.elastictransservice.result.ExceptionMsg;
 import com.jh.elastictransservice.result.ResponseData;
 import com.jh.elastictransservice.service.DataTransService;
 import io.swagger.annotations.Api;
@@ -28,7 +29,7 @@ public class DataTransController {
     public ResponseData csvLine (@ApiParam("文件路径") @RequestParam String filePath,
                                  @ApiParam("分隔符") @RequestParam String splitWord) throws IOException {
         String[] strings = dataTransService.csvLine(filePath, splitWord);
-        return new ResponseData(200,"获取成功",strings);
+        return new ResponseData(strings,ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin
@@ -36,7 +37,7 @@ public class DataTransController {
     @ApiOperation(value = "单个csv文件解析(测试使用，生产环境请使用bulk接口)", notes = "单个csv文件解析")
     public ResponseData csvTrans (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
         dataTransService.csvToEs(new CsvToEsDTO(csvToEs));
-        return new ResponseData(200,"正在解析");
+        return new ResponseData(ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin
@@ -44,7 +45,7 @@ public class DataTransController {
     @ApiOperation(value = "单个csv文件解析的bulk版本", notes = "单个csv文件解析的bulk版本")
     public ResponseData csvTransBulk (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
         dataTransService.csvToEsBulk(new CsvToEsDTO(csvToEs));
-        return new ResponseData(200,"正在解析");
+        return new ResponseData(ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin
@@ -52,7 +53,7 @@ public class DataTransController {
     @ApiOperation(value = "解析该级目录下的所有文件", notes = "解析文件该级目录下的所有文件")
     public ResponseData csvFoldToEs (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
         dataTransService.csvFoldToEs(new CsvToEsDTO(csvToEs));
-        return new ResponseData(200,"正在解析");
+        return new ResponseData(ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin
@@ -60,7 +61,7 @@ public class DataTransController {
     @ApiOperation(value = "遍历该目录到最底层的所有文件并解析", notes = "遍历该目录到最底层的所有文件并解析")
     public ResponseData csvDeepFoldToEs (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
         dataTransService.csvDeepFoldToEs(new CsvToEsDTO(csvToEs));
-        return new ResponseData(200,"正在解析");
+        return new ResponseData(ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin
@@ -69,7 +70,7 @@ public class DataTransController {
     public ResponseData deleteRow (@ApiParam("索引名称") @RequestParam String indexName,
                                    @ApiParam("数据id") @RequestParam String id) throws IOException {
         dataTransService.deleteRow(indexName, id);
-        return new ResponseData();
+        return new ResponseData(ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin
@@ -77,7 +78,7 @@ public class DataTransController {
     @ApiOperation(value = "新建示例csv文件", notes = "新建示例csv文件")
     public ResponseData newCsv (@ApiParam("文件名称") @RequestParam String fileName) throws IOException {
         dataTransService.newCsv(fileName);
-        return new ResponseData();
+        return new ResponseData(ExceptionMsg.SUCCESS);
     }
 
 

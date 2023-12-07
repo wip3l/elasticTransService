@@ -1,10 +1,13 @@
 package com.jh.elastictransservice.result;
 
+import lombok.Getter;
+
 /**
  * @author liqijian
  */
 
 //返回对象实体
+@Getter
 public class Response {
     private int responseCode = 200;
     private String responseMsg = "操作成功";
@@ -29,15 +32,11 @@ public class Response {
         this.responseCode = responseCode;
         this.responseMsg = responseMsg;
     }
-    public int getResponseCode() {
-        return responseCode;
-    }
+
     public void setResponseCode(int responseCode) {
         this.responseCode = responseCode;
     }
-    public String getResponseMsg() {
-        return responseMsg;
-    }
+
     public void setResponseMsg(String responseMsg) {
         this.responseMsg = responseMsg;
     }
