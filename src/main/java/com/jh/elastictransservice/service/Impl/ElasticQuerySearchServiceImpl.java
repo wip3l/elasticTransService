@@ -27,4 +27,6 @@ public class ElasticQuerySearchServiceImpl implements ElasticQuerySearchService 
         return elasticSearchUtils.queryKeyword(dto.getIndexName(), dto.getKeyWord(),
                 dto.getPageNum(), dto.getPageSize());
     }
+
+
 }

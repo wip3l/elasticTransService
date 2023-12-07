@@ -19,6 +19,6 @@ public interface TaskInfoMapper extends Mapper<TaskInfo> {
     @Select("select * from task_info order by start_time desc")
     List<TaskInfo> getTasks();
 
-    @Update("update from task_info set taskState = #{taskState} where id = #{id}")
-    void changeState(@Param("taskState") String taskState,@Param("id") String id);
+    @Update("update from task_info set task_state = #{taskState} and task_state_name = #{taskStateName} where id = #{id}")
+    void changeState(@Param("taskState") int taskState,@Param("taskStateName") int taskStateName,@Param("id") String id);
 }

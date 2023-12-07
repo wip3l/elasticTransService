@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * @author liqijian
@@ -48,6 +49,14 @@ public class IndexHandleController {
     public ResponseData listMapping (@ApiParam("索引名称") @RequestParam String indexName) throws IOException {
         GetIndexResponse indexMapping = indexHandleService.getIndexMapping(indexName);
         return new ResponseData(indexMapping.getMappings(),ExceptionMsg.SUCCESS);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "数据统计", notes = "数据统计")
+    @PostMapping("/docStatic")
+    public ResponseData docStatic () throws IOException {
+        HashMap<Object, Object> objectObjectHashMap = indexHandleService.docStatic();
+        return new ResponseData(objectObjectHashMap,ExceptionMsg.SUCCESS);
     }
 
     @CrossOrigin

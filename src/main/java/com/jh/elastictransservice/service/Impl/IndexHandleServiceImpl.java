@@ -7,6 +7,8 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.core.CountRequest;
+import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
@@ -86,6 +88,23 @@ public class IndexHandleServiceImpl implements IndexHandleService {
                 delete(new DeleteIndexRequest(indexName), RequestOptions.DEFAULT);
         elasticClient.close();
         return delete;
+    }
+
+    @Override
+    public HashMap<Object, Object> docStatic() throws IOException {
+        HashMap<Object, Object> docStaticMap = new HashMap<>();
+        RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
+        GetIndexRequest request = new GetIndexRequest();
+        GetIndexResponse getIndexResponse = elasticClient.indices().get(request, RequestOptions.DEFAULT);
+        String[] indexNames = getIndexResponse.getIndices();
+        for (String indexName : indexNames) {
+            CountRequest countRequest = new CountRequest(indexName);
+            CountResponse countResponse = elasticClient.count(countRequest, RequestOptions.DEFAULT);
+            long count = countResponse.getCount();
+            docStaticMap.put(indexName,count);
+        }
+        elasticClient.close();
+        return docStaticMap;
     }
 
     @Override

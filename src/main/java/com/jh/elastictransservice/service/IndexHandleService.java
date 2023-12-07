@@ -6,6 +6,7 @@ import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * @author liqijian
@@ -18,6 +19,8 @@ public interface IndexHandleService {
     CreateIndexResponse createIndex(IndexCreateDTO index) throws IOException;
 
     AcknowledgedResponse deleteIndex(String indexName) throws IOException;
+
+    HashMap<Object, Object> docStatic() throws IOException;
 
     void deleteAll(String indexName) throws IOException;
 }
