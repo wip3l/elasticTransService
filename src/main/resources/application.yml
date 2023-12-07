@@ -41,7 +41,7 @@ elasticsearch:
     port: 9200
     username: root
 hdfs:
-    address: hdfs://192.168.56.191:9000
-    web: http://192.168.56.191:50070/webhdfs/v1
+    address: hdfs://192.168.0.114:9000
+    web: http://192.168.0.114:50070/webhdfs/v1
 
 
