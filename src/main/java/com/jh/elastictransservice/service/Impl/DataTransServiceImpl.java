@@ -160,11 +160,17 @@ public class DataTransServiceImpl implements DataTransService {
         //初始化client
         RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
         String id = UUID.randomUUID().toString();
-        TaskInfo taskInfo = new TaskInfo(id, csvToEsDTO.getCsvPath(),
-                csvToEsDTO.getIndexName(), "正在解析", csvToEsDTO.getSplitWord(),
-                csvToEsDTO.getIsHasTitle() ? 1 : 0, csvToEsDTO.getIsTitleHasCh() ? 1 : 0,
-                csvToEsDTO.getIsCustomTitle() ? 1 : 0,
-                csvToEsDTO.getTitle(), new Date());
+        TaskInfo taskInfo = new TaskInfo();
+        taskInfo.setId(id);
+        taskInfo.setTaskName(csvToEsDTO.getCsvPath());
+        taskInfo.setSplit(csvToEsDTO.getSplitWord());
+        taskInfo.setTaskState("正在解析");
+        taskInfo.setTaskType(csvToEsDTO.getIndexName());
+        taskInfo.setTitle(String.join(csvToEsDTO.getSplitWord(),csvToEsDTO.getTitle()));
+        taskInfo.setStartTime(System.currentTimeMillis());
+        taskInfo.setIsCustomTitle(csvToEsDTO.getIsCustomTitle() ? 1 : 0);
+        taskInfo.setIsTitleHasCh(csvToEsDTO.getIsTitleHasCh() ? 1 : 0);
+        taskInfo.setIsHasTitle(csvToEsDTO.getIsHasTitle() ? 1 : 0);
         //读取csv文件
         try {
             taskInfoMapper.insert(taskInfo);
@@ -232,6 +238,7 @@ public class DataTransServiceImpl implements DataTransService {
             log.info("es本次同步数据数量:{}", total);
             log.info("es同步数据耗时:{} ms", endTimeMillis - startTimeMillis);
             taskInfo.setTaskState("解析完成");
+            taskInfo.setFinishTime(System.currentTimeMillis());
             taskInfoMapper.updateByPrimaryKey(taskInfo);
 
         } catch (IOException e) {

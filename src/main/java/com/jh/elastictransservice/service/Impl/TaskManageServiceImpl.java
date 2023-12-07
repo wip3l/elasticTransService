@@ -28,7 +28,7 @@ public class TaskManageServiceImpl implements TaskManageService {
     public PageInfo<TaskInfo> getAllTask(int pageNum, int pageSize){
         // 设置分页参数
         PageHelper.startPage(pageNum, pageSize);
-        List<TaskInfo> tasks = taskInfoMapper.selectAll();
+        List<TaskInfo> tasks = taskInfoMapper.getTasks();
         PageInfo<TaskInfo> pageInfo = new PageInfo<>(tasks);
         return pageInfo;
     }
