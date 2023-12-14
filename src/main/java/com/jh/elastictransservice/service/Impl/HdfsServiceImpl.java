@@ -1,7 +1,10 @@
 package com.jh.elastictransservice.service.Impl;
 
+import cn.hutool.core.io.IoUtil;
 import com.jh.elastictransservice.service.HdfsService;
+import com.jh.elastictransservice.utils.FileEncodeUtil;
 import com.jh.elastictransservice.utils.HdfsConn;
+import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -22,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,7 +121,8 @@ public class HdfsServiceImpl implements HdfsService {
 
         switch (fileType){
             case ".txt":
-                MediaType mediaType = new MediaType("text", "plain", StandardCharsets.UTF_8);
+                byte[] buffer = IoUtil.readBytes(inputStream);
+                MediaType mediaType = new MediaType("text", "plain", Charset.forName(FileEncodeUtil.getJavaEncode(buffer)));
                 headers.setContentType(mediaType);
                 break;
             case ".html":

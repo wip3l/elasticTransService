@@ -206,6 +206,7 @@ public class DataTransServiceImpl implements DataTransService {
 
     @Override
     public void newCsv(String fileName) throws IOException {
+
         CsvWriter csvWriter = new CsvWriter(fileName, ',',StandardCharsets.UTF_8);
         String[] header = {"name","gender","age"};
         String[] content = {"lihua","female","24"};
@@ -215,7 +216,8 @@ public class DataTransServiceImpl implements DataTransService {
     }
 
     public static void main(String[] args) {
-        File file = new File("C:\\Users\\apart\\Desktop\\300 rds_2021-03-13_18-33-45-104.dat.txt");
+//        File file = new File("C:\\Users\\apart\\Desktop\\300 rds_2021-03-13_18-33-45-104.dat.txt");
+        File file = new File("C:\\Users\\JH\\Desktop\\task_info.sql");
         try(FileInputStream fs = new FileInputStream(file)){
             byte[] buffer = IoUtil.readBytes(fs);
             System.out.println(FileEncodeUtil.getJavaEncode(buffer));
