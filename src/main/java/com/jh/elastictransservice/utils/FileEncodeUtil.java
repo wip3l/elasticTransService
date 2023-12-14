@@ -8,9 +8,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class FileEncodeUtil extends Encoding {
-    /**
-     * Singleton
-     */
     public static FileEncodeUtil getInstance(){
         return Singleton.get(FileEncodeUtil.class);
     }
@@ -40,9 +37,6 @@ public class FileEncodeUtil extends Encoding {
 
     int JPFreq[][];
 
-    // int UnicodeFreq[94][128];
-    // public static String[] nicename;
-    // public static String[] codings;
     public boolean debug;
 
     public FileEncodeUtil() {
@@ -58,28 +52,6 @@ public class FileEncodeUtil extends Encoding {
         // Initialize the Frequency Table for GB, GBK, Big5, EUC-TW, KR, JP
         initialize_frequencies();
     }
-
-//    public static void main(String argc[]) {
-//      ExchangeUtil sinodetector;
-//      int result = OTHER;
-//      int i;
-//      sinodetector = new ExchangeUtil();
-//      for (i = 0; i < argc.length; i++) {
-//        if (argc[i].startsWith("http://") == true) {
-//          try {
-//            result = sinodetector.detectEncoding(new URL(argc[i]));
-//          } catch (Exception e) {
-//            System.err.println("Bad URL " + e.toString());
-//          }
-//        } else if (argc[i].equals("-d")) {
-//          sinodetector.debug = true;
-//          continue;
-//        } else {
-//          result = sinodetector.detectEncoding(new File(argc[i]));
-//        }
-//        System.out.println(nicename[result]);
-//      }
-//    }
 
     /**
      * Function : detectEncoding Aruguments: URL Returns : One of the encodings from the Encoding
@@ -635,8 +607,6 @@ public class FileEncodeUtil extends Encoding {
         }
         rangeval = 50 * ((float) isochars / (float) dbchars);
         freqval = 50 * ((float) isofreq / (float) totalfreq);
-        // System.out.println("isochars dbchars isofreq totalfreq " + isochars + " " + dbchars + " " + isofreq + " " + totalfreq + "
-        // " + rangeval + " " + freqval);
         return (int) (rangeval + freqval);
         // return 0;
     }
@@ -673,8 +643,6 @@ public class FileEncodeUtil extends Encoding {
             return 0;
         }
         score = (int) (100 * ((float) goodbytes / (float) (rawtextlen - asciibytes)));
-        // System.out.println("rawtextlen " + rawtextlen + " goodbytes " + goodbytes + " asciibytes " + asciibytes + " score " +
-        // score);
         // If not above 98, reduce to zero to prevent coincidental matches
         // Allows for some (few) bad formed sequences
         if (score > 98) {

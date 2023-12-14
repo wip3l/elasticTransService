@@ -112,7 +112,13 @@ public class DataTransServiceImpl implements DataTransService {
             FileInputStream fis = new FileInputStream(file);
             byte[] buffer = IoUtil.readBytes(fis);
             taskInfoMapper.insert(taskInfo);
-            CsvReader csvReader = new CsvReader(csvToEsDTO.getCsvPath(), csvToEsDTO.getSplitWord().charAt(0),
+            char splitChar;
+            if ( csvToEsDTO.getSplitWord().equals("\t")) {
+                splitChar = '\t';
+            } else {
+                splitChar = csvToEsDTO.getSplitWord().charAt(0);
+            }
+            CsvReader csvReader = new CsvReader(csvToEsDTO.getCsvPath(), splitChar,
                     Charset.forName(FileEncodeUtil.getJavaEncode(buffer)));
             //设置header
             String[] headers;
