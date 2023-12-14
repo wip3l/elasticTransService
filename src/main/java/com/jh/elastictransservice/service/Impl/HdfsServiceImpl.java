@@ -114,6 +114,7 @@ public class HdfsServiceImpl implements HdfsService {
         }
 
         FSDataInputStream inputStream = fileSystem.open(hdfsPath);
+        FSDataInputStream is = fileSystem.open(hdfsPath);
         HttpHeaders headers = new HttpHeaders();
 
         String filename = hdfsPath.getName();
@@ -121,7 +122,7 @@ public class HdfsServiceImpl implements HdfsService {
 
         switch (fileType){
             case ".txt":
-                byte[] buffer = IoUtil.readBytes(inputStream);
+                byte[] buffer = IoUtil.readBytes(is);
                 MediaType mediaType = new MediaType("text", "plain", Charset.forName(FileEncodeUtil.getJavaEncode(buffer)));
                 headers.setContentType(mediaType);
                 break;
