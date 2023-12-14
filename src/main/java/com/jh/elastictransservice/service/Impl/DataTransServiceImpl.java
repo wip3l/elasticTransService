@@ -113,7 +113,7 @@ public class DataTransServiceImpl implements DataTransService {
             byte[] buffer = IoUtil.readBytes(fis);
             taskInfoMapper.insert(taskInfo);
             char splitChar;
-            if ( csvToEsDTO.getSplitWord().equals("\t")) {
+            if ( csvToEsDTO.getSplitWord().equals("\\t")) {
                 splitChar = '\t';
             } else {
                 splitChar = csvToEsDTO.getSplitWord().charAt(0);
