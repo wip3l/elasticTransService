@@ -1,5 +1,6 @@
 package com.jh.elastictransservice.service.Impl;
 
+import cn.hutool.core.io.IoUtil;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import com.jh.elastictransservice.common.dto.CsvToEsDTO;
@@ -8,12 +9,12 @@ import com.jh.elastictransservice.mapper.TaskInfoMapper;
 import com.jh.elastictransservice.service.DataTransService;
 import com.jh.elastictransservice.utils.DataTransUtils;
 import com.jh.elastictransservice.utils.ElasticClientUtils;
+import com.jh.elastictransservice.utils.FileEncodeUtil;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.GetIndexRequest;
@@ -25,10 +26,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -47,70 +46,6 @@ public class DataTransServiceImpl implements DataTransService {
     private DataTransUtils dataTransUtils;
     @Autowired
     private TaskInfoMapper taskInfoMapper;
-
-    @Override
-    @Async
-    public void csvToEs(CsvToEsDTO csvToEsDTO) throws IOException {
-        //初始化client
-        RestHighLevelClient elasticClient = elasticClientUtils.getElasticClient();
-        //判断index是否存在
-        GetIndexRequest request = new GetIndexRequest(csvToEsDTO.getIndexName());
-        try {
-            if (!elasticClient.indices().exists(request, RequestOptions.DEFAULT)) {
-                throw new RuntimeException("index不存在，请先创建index");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("无法确认index是否存在",e);
-        }
-
-        //读取csv文件
-        try {
-            CsvReader csvReader = new CsvReader(csvToEsDTO.getCsvPath(), csvToEsDTO.getSplitWord().charAt(0),
-                    StandardCharsets.UTF_8);
-            //设置header
-            String[] headers;
-            String[] oriHeader;
-            if (csvToEsDTO.getIsCustomTitle()) {
-                headers = csvToEsDTO.getTitle();
-                csvReader.setHeaders(headers);
-                oriHeader = new String[]{"自定义表头时无原始表头"};
-            } else {
-                csvReader.readHeaders();
-                oriHeader = csvReader.getHeaders();
-                if (csvToEsDTO.getIsTitleHasCh()) {
-                    headers = dataTransUtils.ch2py(oriHeader);
-                } else {
-                    headers = oriHeader;
-                }
-                csvReader.setHeaders(headers);
-            }
-            if (headers.length < 1) {
-                throw new RuntimeException("请检查csv文件Title配置");
-            }
-            //遍历csv文件行
-            while (csvReader.readRecord()) {
-//                HashFunction hf = Hashing.murmur3_128();
-//                String s1 = hf.newHasher().putString(csvReader.get(0)+csvReader.get(1)+csvReader.get(2), Charsets.UTF_8).hash().toString();
-                String s1 = UUID.randomUUID().toString();
-                UpdateRequest updateRequest = new UpdateRequest(csvToEsDTO.getIndexName(), s1
-                        );
-                Map<String, Object> jsonMap = new HashMap<>();
-                jsonMap.put("oriHeader", Arrays.toString(oriHeader));
-                for (String header : headers) {
-                    jsonMap.put(header, csvReader.get(header));
-                }
-                updateRequest.doc(jsonMap);
-                updateRequest.docAsUpsert(true);
-                elasticClient.update(updateRequest, RequestOptions.DEFAULT);
-                log.info("解析完成:"+csvToEsDTO.getCsvPath());
-            }
-
-        } catch (IOException e) {
-            log.error("解析csv文件失败", e);
-            throw new RuntimeException("解析csv文件失败",e);
-        }
-        elasticClient.close();
-    }
 
 
     @Override
@@ -173,9 +108,12 @@ public class DataTransServiceImpl implements DataTransService {
         taskInfo.setIsHasTitle(csvToEsDTO.getIsHasTitle() ? 1 : 0);
         //读取csv文件
         try {
+            File file = new File(csvToEsDTO.getCsvPath());
+            FileInputStream fis = new FileInputStream(file);
+            byte[] buffer = IoUtil.readBytes(fis);
             taskInfoMapper.insert(taskInfo);
             CsvReader csvReader = new CsvReader(csvToEsDTO.getCsvPath(), csvToEsDTO.getSplitWord().charAt(0),
-                    StandardCharsets.UTF_8);
+                    Charset.forName(FileEncodeUtil.getJavaEncode(buffer)));
             //设置header
             String[] headers;
             String[] oriHeader;
@@ -274,6 +212,16 @@ public class DataTransServiceImpl implements DataTransService {
         csvWriter.writeRecord(header);
         csvWriter.writeRecord(content);
         csvWriter.close();
+    }
+
+    public static void main(String[] args) {
+        File file = new File("C:\\Users\\apart\\Desktop\\300 rds_2021-03-13_18-33-45-104.dat.txt");
+        try(FileInputStream fs = new FileInputStream(file)){
+            byte[] buffer = IoUtil.readBytes(fs);
+            System.out.println(FileEncodeUtil.getJavaEncode(buffer));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

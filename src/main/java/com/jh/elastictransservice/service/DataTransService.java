@@ -10,8 +10,6 @@ import java.io.IOException;
  */
 public interface DataTransService {
 
-    void csvToEs(CsvToEsDTO csvToEsDTO) throws IOException;
-
     void newCsv(String fileName) throws IOException;
 
     @Async

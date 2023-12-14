@@ -32,13 +32,6 @@ public class DataTransController {
         return new ResponseData(strings,ExceptionMsg.SUCCESS);
     }
 
-    @CrossOrigin
-    @PostMapping("/csvTrans")
-    @ApiOperation(value = "单个csv文件解析(测试使用，生产环境请使用bulk接口)", notes = "单个csv文件解析")
-    public ResponseData csvTrans (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
-        dataTransService.csvToEs(new CsvToEsDTO(csvToEs));
-        return new ResponseData(ExceptionMsg.SUCCESS);
-    }
 
     @CrossOrigin
     @PostMapping("/csvTransBulk")
