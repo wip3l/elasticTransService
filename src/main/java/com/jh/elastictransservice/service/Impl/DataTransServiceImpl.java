@@ -130,6 +130,12 @@ public class DataTransServiceImpl implements DataTransService {
             } else {
                 csvReader.readHeaders();
                 oriHeader = csvReader.getHeaders();
+                List<String> mlist = new ArrayList<>(Arrays.asList(oriHeader));
+                if (mlist.contains("")) {
+                    mlist.remove("");
+                    oriHeader = mlist.toArray(new String[0]);
+                }
+
                 if (csvToEsDTO.getIsTitleHasCh()) {
                     headers = dataTransUtils.ch2py(oriHeader);
                 } else {
