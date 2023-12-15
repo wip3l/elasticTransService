@@ -2,7 +2,7 @@
 
 ## 1. Introduction
 
-CSV file parsing and query service based on Elasticsearch;
+CSV file parsing and query service based on ElasticSearch;
 
 Media upload and browsing service based on HDFS.
 
@@ -12,7 +12,7 @@ You can customize the CSV file title or use the originals;
 
 You can customize the Separator  (escape characters include );
 
-We use Elastic Search for data store so you can parse file without maintaining table structure;
+We use ElasticSearch for data store so you can parse file without maintaining table structure;
 
 You can also use global search and conditional search;
 
@@ -20,7 +20,7 @@ We support fuzzy matching;
 
 HDFS based file storage can store massive amounts of data files;
 
-Common media files such as videos, text, and images support online preview.
+Common media files such as videos, text and images support online preview.
 
 ## 3.Getting Started
 
@@ -28,7 +28,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-You can download  the code with following url:
+You can download the code with following url:
 
 `https://github.com/wip3l/elasticTransService.git`
 
