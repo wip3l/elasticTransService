@@ -11,7 +11,11 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author liqijian
@@ -37,24 +41,39 @@ public class DataTransController {
     @PostMapping("/csvTransBulk")
     @ApiOperation(value = "单个csv文件解析的bulk版本", notes = "单个csv文件解析的bulk版本")
     public ResponseData csvTransBulk (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
-        dataTransService.csvToEsBulk(new CsvToEsDTO(csvToEs));
-        return new ResponseData(ExceptionMsg.SUCCESS);
+        Path path = Paths.get(csvToEs.getCsvPath());
+        if (Files.exists(path)) {
+            dataTransService.csvToEsBulk(new CsvToEsDTO(csvToEs));
+            return new ResponseData(ExceptionMsg.SUCCESS);
+        } else {
+            return new ResponseData(ExceptionMsg.ERROR.getCode(), "请确认文件路径是否正确");
+        }
     }
 
     @CrossOrigin
     @PostMapping("/csvFoldToEs")
     @ApiOperation(value = "解析该级目录下的所有文件", notes = "解析文件该级目录下的所有文件")
     public ResponseData csvFoldToEs (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
-        dataTransService.csvFoldToEs(new CsvToEsDTO(csvToEs));
-        return new ResponseData(ExceptionMsg.SUCCESS);
+        Path path = Paths.get(csvToEs.getCsvPath());
+        if (Files.exists(path)) {
+            dataTransService.csvToEsBulk(new CsvToEsDTO(csvToEs));
+            return new ResponseData(ExceptionMsg.SUCCESS);
+        } else {
+            return new ResponseData(ExceptionMsg.ERROR.getCode(), "请确认文件路径是否正确");
+        }
     }
 
     @CrossOrigin
     @PostMapping("/csvDeepFoldToEs")
     @ApiOperation(value = "遍历该目录到最底层的所有文件并解析", notes = "遍历该目录到最底层的所有文件并解析")
     public ResponseData csvDeepFoldToEs (@ApiParam("csv导入es参数") @RequestBody CsvToEs csvToEs) throws IOException {
-        dataTransService.csvDeepFoldToEs(new CsvToEsDTO(csvToEs));
-        return new ResponseData(ExceptionMsg.SUCCESS);
+        Path path = Paths.get(csvToEs.getCsvPath());
+        if (Files.exists(path)) {
+            dataTransService.csvToEsBulk(new CsvToEsDTO(csvToEs));
+            return new ResponseData(ExceptionMsg.SUCCESS);
+        } else {
+            return new ResponseData(ExceptionMsg.ERROR.getCode(), "请确认文件路径是否正确");
+        }
     }
 
     @CrossOrigin
