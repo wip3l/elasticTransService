@@ -12,7 +12,7 @@ You can customize the CSV file title or use the originals;
 
 You can customize the Separator  (escape characters include );
 
-We use ElasticSearch for data store so you can parse file without maintaining table structure;
+We use ElasticSearch for data store, so you can parse file without maintaining table structure;
 
 You can also use global search and conditional search;
 

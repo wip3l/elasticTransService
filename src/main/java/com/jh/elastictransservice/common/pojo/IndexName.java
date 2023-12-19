@@ -12,14 +12,12 @@ import java.util.Date;
  */
 @Data
 @Table(name = "field_name")
-public class FieldName implements Serializable {
-
+public class IndexName implements Serializable {
     private static final long serialVersionUID = -4861414010338163524L;
 
     @Id
     private String id;
-    private String chName;
-    private String EnName;
-    private String field_type;
+    private String index;
+    private String showName;
     private Date create_time;
 }
