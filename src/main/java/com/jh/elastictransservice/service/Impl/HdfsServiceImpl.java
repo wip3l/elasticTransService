@@ -4,8 +4,6 @@ import cn.hutool.core.io.IoUtil;
 import com.jh.elastictransservice.service.HdfsService;
 import com.jh.elastictransservice.utils.FileEncodeUtil;
 import com.jh.elastictransservice.utils.HdfsConn;
-import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -13,20 +11,16 @@ import org.apache.hadoop.fs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,7 +80,6 @@ public class HdfsServiceImpl implements HdfsService {
 
             Map<String, Object> map2 = new HashMap<>();
             String docPath = fileStatus.getPath().toUri().getPath();
-            String downLoadPath = fileStatus.getPath().toUri().getPath();
             String docName = fileStatus.getPath().getName();
             boolean isFile = fileStatus.isFile();
             map2.put("downLoadPath",hdfsWeb+docPath+"?op=OPEN");

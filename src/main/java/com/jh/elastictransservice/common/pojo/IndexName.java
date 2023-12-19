@@ -19,5 +19,5 @@ public class IndexName implements Serializable {
     private String id;
     private String index;
     private String showName;
-    private Date create_time;
+    private Date createTime;
 }

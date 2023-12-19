@@ -19,7 +19,8 @@ public class FieldName implements Serializable {
     @Id
     private String id;
     private String chName;
-    private String EnName;
-    private String field_type;
-    private Date create_time;
+    private String enName;
+    private String fieldType;
+    private String notes;
+    private Date createTime;
 }

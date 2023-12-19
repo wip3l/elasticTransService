@@ -4,32 +4,28 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jh.elastictransservice.common.pojo.FieldName;
 import com.jh.elastictransservice.mapper.FieldNameMapper;
-import com.jh.elastictransservice.service.FieldNameServe;
-import org.elasticsearch.client.indices.GetIndexResponse;
-import org.elasticsearch.cluster.metadata.MappingMetaData;
+import com.jh.elastictransservice.service.FieldNameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
-public class FieldNameServeImpl implements FieldNameServe {
+public class FieldNameServeImpl implements FieldNameService {
     @Autowired
     private FieldNameMapper fieldNameMapper;
 
     @Override
-    public PageInfo<FieldName> getFieldByIndex(String indexName, int pageNum, int pageSize) {
+    public PageInfo<FieldName> getAllFields(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<FieldName> byIndex = fieldNameMapper.getByIndex(indexName);
-        return new PageInfo<>(byIndex);
+        List<FieldName> fields = fieldNameMapper.getAllFields(pageNum, pageSize);
+        PageInfo<FieldName> pageInfo = new PageInfo<>(fields);
+        return pageInfo;
     }
 
-    public void setIndexMappingToField (GetIndexResponse indexResponse) {
-        Map<String, MappingMetaData> mappings = indexResponse.getMappings();
-        mappings.forEach((k,v)->{
-
-        });
+    @Override
+    public void batchInsert(List<FieldName> userList) {
+        fieldNameMapper.batchInsert(userList);
     }
 
 }
