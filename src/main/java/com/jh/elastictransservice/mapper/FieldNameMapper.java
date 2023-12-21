@@ -1,12 +1,12 @@
 package com.jh.elastictransservice.mapper;
 
 import com.jh.elastictransservice.common.pojo.FieldName;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liqijian
@@ -24,5 +24,17 @@ public interface FieldNameMapper extends Mapper<FieldName> {
             "</foreach>" +
             "</script>")
     void batchInsert(List<FieldName> userList);
+
+    @Select({
+            "<script>",
+            "SELECT ch_name,en_name FROM field_name",
+            "WHERE ch_name IN",
+            "<foreach item='name' collection='names' open='(' separator=',' close=')'>",
+            "#{name}",
+            "</foreach>",
+            "</script>"
+    })
+
+    List<FieldName> getEnNames(@Param("names") List<String> names);
 
 }

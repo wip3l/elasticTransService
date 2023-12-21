@@ -11,7 +11,7 @@ import java.util.Date;
  * @author liqijian
  */
 @Data
-@Table(name = "field_name")
+@Table(name = "index_name")
 public class IndexName implements Serializable {
     private static final long serialVersionUID = -4861414010338163524L;
 

@@ -4,7 +4,9 @@ import cn.hutool.core.io.IoUtil;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import com.jh.elastictransservice.common.dto.CsvToEsDTO;
+import com.jh.elastictransservice.common.pojo.FieldName;
 import com.jh.elastictransservice.common.pojo.TaskInfo;
+import com.jh.elastictransservice.mapper.FieldNameMapper;
 import com.jh.elastictransservice.mapper.TaskInfoMapper;
 import com.jh.elastictransservice.service.DataTransService;
 import com.jh.elastictransservice.utils.DataTransUtils;
@@ -46,6 +48,8 @@ public class DataTransServiceImpl implements DataTransService {
     private DataTransUtils dataTransUtils;
     @Autowired
     private TaskInfoMapper taskInfoMapper;
+    @Autowired
+    private FieldNameMapper fieldNameMapper;
 
 
     @Override
@@ -131,13 +135,30 @@ public class DataTransServiceImpl implements DataTransService {
                 csvReader.readHeaders();
                 oriHeader = csvReader.getHeaders();
                 List<String> mlist = new ArrayList<>(Arrays.asList(oriHeader));
+
                 if (mlist.contains("")) {
                     mlist.remove("");
                     oriHeader = mlist.toArray(new String[0]);
                 }
 
                 if (csvToEsDTO.getIsTitleHasCh()) {
-                    headers = dataTransUtils.ch2py(oriHeader);
+                    /* hutao 修改 */
+                    List<FieldName> enNames = fieldNameMapper.getEnNames(mlist); // 用mlist所有中文名称去查到field_name的结果
+                    List<String> headersNew = new ArrayList<>(); // 新建用来存放查到field_name的英文名称
+
+                    for (FieldName fieldName : enNames){
+                        String chName = fieldName.getChName();
+                        headersNew.add(fieldName.getEnName()); // 增加查到的中文名称
+                        mlist.remove(chName); // 从mlist中删掉查到的中文名称，没被删掉的就是查不到的
+                    }
+                    if(mlist.size()>0){
+                        String[] neworiHeader = mlist.toArray(new String[mlist.size()]);// 没被删掉的就要用来中文转拼音
+                        headersNew.addAll(Arrays.asList(dataTransUtils.ch2py(neworiHeader))); // 增加到新建存放英文名称的集合
+                    }
+                    headers = headersNew.toArray(new String[headersNew.size()]); // 把新建存放英文名称的集合赋值给headers
+                    /* hutao 修改 */
+
+//                    headers = dataTransUtils.ch2py(oriHeader);
                 } else {
                     headers = oriHeader;
                 }
