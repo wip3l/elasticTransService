@@ -154,6 +154,8 @@ public class DataTransServiceImpl implements DataTransService {
                     if(mlist.size()>0){
                         String[] neworiHeader = mlist.toArray(new String[mlist.size()]);// 没被删掉的就要用来中文转拼音
                         headersNew.addAll(Arrays.asList(dataTransUtils.ch2py(neworiHeader))); // 增加到新建存放英文名称的集合
+                        List<FieldName> userList = dataTransUtils.ch2pyFieldName(neworiHeader); // 获取到没被删掉的中文和拼音
+                        fieldNameMapper.batchInsert(userList); // 把中文和拼音插入field_name表中
                     }
                     headers = headersNew.toArray(new String[headersNew.size()]); // 把新建存放英文名称的集合赋值给headers
                     /* hutao 修改 */

@@ -1,5 +1,6 @@
 package com.jh.elastictransservice.utils;
 
+import com.jh.elastictransservice.common.pojo.FieldName;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -8,9 +9,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author liqijian
@@ -50,6 +49,45 @@ public class DataTransUtils {
             newStrings[i] = String.valueOf(stringBuilder);
         }
         return newStrings;
+    }
+
+    /**
+     * 把汉字名称转为拼音，并返回List<FieldName>，FieldName包含中文名称和拼音
+     * @param strings
+     * @return
+     */
+    public List<FieldName> ch2pyFieldName(String[] strings) {
+        List<FieldName> list = new ArrayList<>();
+        String[] newStrings = new String[strings.length];
+        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+        format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+        format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        format.setVCharType(HanyuPinyinVCharType.WITH_V);
+        for ( int i =0 ; i < strings.length; i++) {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            String chName = strings[i].trim();
+            char[] hanYuArr = chName.toCharArray();
+            try {
+                for (int j = 0, len = hanYuArr.length; j < len; j++) {
+                    if (Character.toString(hanYuArr[j]).matches("[\\u4E00-\\u9FA5]+")) {
+                        String[] pys = PinyinHelper.toHanyuPinyinStringArray(hanYuArr[j], format);
+                        for (String py : pys) {
+                            stringBuilder.append(py);
+                        }
+                    } else {
+                        stringBuilder.append(hanYuArr[j]);
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            FieldName fieldName = new FieldName();
+            fieldName.setEnName(String.valueOf(stringBuilder));
+            fieldName.setChName(chName);
+            list.add(fieldName);
+        }
+        return list;
     }
 
 
