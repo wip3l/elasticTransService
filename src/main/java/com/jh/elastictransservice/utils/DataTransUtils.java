@@ -58,7 +58,6 @@ public class DataTransUtils {
      */
     public List<FieldName> ch2pyFieldName(String[] strings) {
         List<FieldName> list = new ArrayList<>();
-        String[] newStrings = new String[strings.length];
         HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
         format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
         format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
