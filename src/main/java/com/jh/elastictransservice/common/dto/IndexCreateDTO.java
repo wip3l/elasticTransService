@@ -12,10 +12,12 @@ import java.util.Map;
 @Data
 public class IndexCreateDTO {
     private String indexName;
+    private String showName;
     private List<Map<String, String>> mapping;
 
     public IndexCreateDTO(IndexCreate indexCreate) {
         this.indexName = indexCreate.getIndexName();
+        this.showName = indexCreate.getShowName();
         this.mapping = indexCreate.getMapping();
     }
 }

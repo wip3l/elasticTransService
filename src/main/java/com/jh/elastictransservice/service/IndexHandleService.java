@@ -7,6 +7,7 @@ import org.elasticsearch.client.indices.GetIndexResponse;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author liqijian
@@ -20,7 +21,9 @@ public interface IndexHandleService {
 
     AcknowledgedResponse deleteIndex(String indexName) throws IOException;
 
-    HashMap<Object, Object> docStatic() throws IOException;
+    List<HashMap<Object, Object>> docStatic() throws IOException;
 
     void deleteAll(String indexName) throws IOException;
+
+    HashMap<Object, Object> queryIndex(String indexName, String showName);
 }

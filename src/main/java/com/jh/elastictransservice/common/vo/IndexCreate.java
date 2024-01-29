@@ -20,5 +20,7 @@ public class IndexCreate implements Serializable {
     @ApiModelProperty(value = "索引名称", required = true)
     private String indexName;
     @ApiModelProperty(value = "索引数据")
+    private String showName;
+    @ApiModelProperty(value = "索引用于展示的中文名称")
     private List<Map<String, String>> mapping;
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author liqijian
@@ -55,7 +56,7 @@ public class IndexHandleController {
     @ApiOperation(value = "数据统计", notes = "数据统计")
     @PostMapping("/docStatic")
     public ResponseData docStatic () throws IOException {
-        HashMap<Object, Object> objectObjectHashMap = indexHandleService.docStatic();
+        List<HashMap<Object, Object>> objectObjectHashMap = indexHandleService.docStatic();
         return new ResponseData(objectObjectHashMap,ExceptionMsg.SUCCESS);
     }
 
@@ -72,6 +73,14 @@ public class IndexHandleController {
     public ResponseData truncateIndex(@ApiParam("索引名称") @RequestParam String indexName) throws IOException {
         indexHandleService.deleteAll(indexName);
         return new ResponseData(ExceptionMsg.SUCCESS.getCode(),"正在清空索引数据： " + indexName);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "索引名称是否存在", notes = "索引名称是否存在")
+    @PostMapping("/queryIndex")
+    public ResponseData queryIndex(@ApiParam("索引英文名和展示中文名") @RequestBody @Valid IndexCreate index) throws IOException {
+        HashMap<Object, Object> objectObjectHashMap = indexHandleService.queryIndex(index.getIndexName(),index.getShowName());
+        return new ResponseData(objectObjectHashMap,ExceptionMsg.SUCCESS);
     }
 
 }
