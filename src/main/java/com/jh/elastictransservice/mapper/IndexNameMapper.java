@@ -28,7 +28,7 @@ public interface IndexNameMapper  extends Mapper<IndexName> {
 
     List<IndexName> getShowName(@Param("names") List<String> names);
 
-    @Select("select * from index_name where `index`=#{indexName} and show_name=#{showName}")
+    @Select("select * from index_name where `index`=#{indexName} or show_name=#{showName}")
     List<IndexName> queryIndex(@Param("indexName") String indexName, @Param("showName") String showName);
 
     @Insert("INSERT INTO index_name (`index`, show_name) VALUES (#{indexName},#{showName}) ")
