@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.jh</groupId>
-    <artifactId>elasticTransService</artifactId>
+    <artifactId>dataTransServer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>elasticTransService</name>
-    <description>elasticTransService</description>
+    <name>dataTransServer</name>
+    <description>dataTransServer</description>
     <properties>
         <java.version>8</java.version>
     </properties>
